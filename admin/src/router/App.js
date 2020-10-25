@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-import { Header, InputBox, AddBlog, BlogList } from '../components/CMSside';
+import { Header, BlogForm, BlogList } from '../components';
 import "./App.css"
 
 
@@ -12,9 +12,8 @@ const App = () => {
       <Router>
         <Header />
         <Switch>
-            <Route exact path="/" component={InputBox}/>          
-            <Route path="/add-blog" component={AddBlog}/>
-            <Route path="/blog-list" component={BlogList}/>
+            <Route exact path="/" component={BlogList}/>          
+            <Route path="/blog-form/:id?" component={BlogForm}/>
         </Switch>
       </Router>
     </div>

@@ -12,8 +12,8 @@ const Header = () => {
       <h1>CMS</h1>
       <div className="header">
         <Link to='/'>Input</Link>
-        <Link to='/blog-list'>Blogs</Link>
-        <Link to='/add-blog'>Add Blog</Link>
+        <Link to='/'>Blogs</Link>
+        <Link to='/blog-form'>Add Blog</Link>
       </div>
     </div>
   )

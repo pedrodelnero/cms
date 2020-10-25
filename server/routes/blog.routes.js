@@ -1,7 +1,14 @@
-
 import express from 'express';
+import { getBlogs, addBlog, deleteBlog , getBlogById} from '../controllers/blog.controller.js'
 
 const router = express.Router();
+
+router.get('/blogs', getBlogs)
+router.post('/blogs', addBlog)
+router.delete('/blogs/:blogId', deleteBlog)
+router.get('/blogs/:blogId', getBlogById)
+
+/*
 
 router.get('/get-blogs', (req, res) => {
     const sqlSelect = 'SELECT * FROM blog';
@@ -30,7 +37,7 @@ router.delete('/delete-blog/:id', (req, res) => {
         if (err) console.log(err)
     })
 })
-
+*/
 
 
 export default router;
