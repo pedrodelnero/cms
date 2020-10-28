@@ -1,12 +1,12 @@
-// import {db} from "../server.js";
-import db from "./db.js";
+import db from "../config/db.config.js";
 
 
 const Blog = function(blog) {
   this.blog_title = blog.blogTitle;
   this.blog_body = blog.blogBody;
+  this.blog_slug = blog.blogTitle.toLowerCase().trim().replace(/ /g, '-');
+  console.log(this.blog_slug)
 };
-
 
 Blog.getAll = () => {
   return new Promise((res, rej) => {
@@ -70,11 +70,24 @@ Blog.findById = (blogId) => {
     const sqlSelect = "SELECT * FROM blogs WHERE blog_id = ?";
     db.query(sqlSelect, blogId, (err, results) => {
       if (err) return rej(err);
-      console.log('00', results)
+      // console.log('00', results)
       return res(results)
     })
   })
 };
+
+Blog.findBySlug = (blogSlug) => {
+  return new Promise((res, rej) => {
+    const sqlSelect = "SELECT * FROM blogs WHERE blog_slug = ?";
+    db.query(sqlSelect, blogSlug, (err, results) => {
+      if (err) return rej(err);
+      // console.log('00', results)
+      return res(results[0])
+    })
+  })
+};
+
+
 
 // ORIGINAL
 // Blog.findById = (blogId, result) => {

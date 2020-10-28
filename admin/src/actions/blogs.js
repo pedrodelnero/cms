@@ -1,7 +1,7 @@
 import axios from 'axios';
 // import Cookies from 'universal-cookie';
 
-import { ADD_BLOG, GET_BLOGS, DELETE_BLOG, UPDATE_BLOG, GET_BLOG } from '../constants/actionTypes';
+import { ADD_BLOG, GET_BLOGS, DELETE_BLOG, UPDATE_BLOG, GET_BLOG_BY_ID } from '../constants/actionTypes';
 
 // const cookies = new Cookies();
 // const token = cookies.get('token');
@@ -38,6 +38,7 @@ export const updateBlog = (id, blog) => async (dispatch) => {
 
 export const getBlogById = (id) => async (dispatch) => {
   const { data: blog } = await api.get(`/${id}`);
+  console.log('999', blog)
     
-  dispatch({ type: GET_BLOG, payload: blog });
+  dispatch({ type: GET_BLOG_BY_ID, payload: blog });
 };

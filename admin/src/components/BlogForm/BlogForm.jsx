@@ -3,26 +3,26 @@ import { useParams } from 'react-router-dom';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { EditorState, convertToRaw } from 'draft-js';
-import axios from 'axios';
-import draftToHtml from "draftjs-to-html";
+// import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { addBlog, updateBlog, getBlogById } from '../../actions/blogs';
-import "./BlogForm.css";
+import "./styles.css";
 
 const BlogForm = () => {
     const { id } = useParams();
     const blog = useSelector((state) => {
       state.blogs.find((blog) => blog.blog_id === id);
     })
+    // tackle this
     const [editorState, setEditorState] = useState(blog?.blog_body || EditorState.createEmpty());
     const [blogTitle, setBlogTitle] = useState(blog?.blog_title || '');
-    // const [blogList, setBlogList] = useState([]);
     const dispatch = useDispatch();
     
-    useEffect(() => {
-      dispatch(getBlogById(id));
-    }, [id]);
+    // useEffect(() => {
+    //   dispatch(getBlogById(id));
+    //   console.log('88', blog)
+    // }, [id, dispatch]);
 
   
     const handleSubmit = (e) => {
@@ -59,8 +59,6 @@ const BlogForm = () => {
         setEditorState(editorState)
     };
 
-
-    // console.log(convertToRaw(editorState.getCurrentContent()))
     return (
         <div className="richtext">
           <h1 variant="h6">{id ? "Edit Blog" : "Add Blog"}</h1>

@@ -21,18 +21,7 @@ export const getBlogs = async (req, res) => {
 // };
 
 //PROMISE
-export const getBlogById = async (req, res) => {
-    const { blogId } = req.params;
 
-    try {
-        const blog = await Blog.findById(blogId);
-
-        !blog ? res.status(404).json({ error: 'No blog with ID provided' }) : res.status(200).send(blog)
-
-    } catch (error) {
-        console.log(error)
-    }
-};
 
 // ORIGINAL
 // export const getBlogById = (req, res) => {
@@ -79,6 +68,36 @@ export const deleteBlog = (req, res) => {
             }
         } else res.send({ message: `Blog was deleted successfully!` });
     });
+};
+
+
+
+export const getBySlug = async (req, res) => {
+    const { slug } = req.params;
+    console.log('HERE ->', slug)
+
+    try {
+        const blog = await Blog.findBySlug(slug);
+        console.log('testttt', blog);
+
+        !blog ? res.status(404).json({ error: 'No blog with ID provided' }) : res.status(200).send(blog)
+
+    } catch (error) {
+        console.log(error)
+    }
+};
+
+export const getBlogById = async (req, res) => {
+    const { blogId } = req.params;
+
+    try {
+        const blog = await Blog.findById(blogId);
+
+        !blog ? res.status(404).json({ error: 'No blog with ID provided' }) : res.status(200).send(blog)
+
+    } catch (error) {
+        console.log(error)
+    }
 };
 
 

@@ -1,0 +1,16 @@
+.blog-list-item {
+    border: solid 1px black;
+    display: flex;
+    padding: 5px;
+    margin: 0 auto;
+    align-content: space-between;
+}
+
+.blog-list-item div {
+    display: flex;
+    padding: 5px;
+}
+
+.blog-list-item-title {
+    margin: 0 120px;
+}
