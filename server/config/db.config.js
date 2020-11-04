@@ -1,25 +1,21 @@
-import mysql from "mysql";
+import Sequelize from "sequelize";
 
-
-const db = mysql.createPool({
+const db = new Sequelize('cmsdb','root', process.env.DB_PASSWORD,{
   host: 'localhost',
-  user: "root",
-  password: process.env.DB_PASSWORD,
-  database: 'cmsdb'
+  port: 3306,
+  dialect: 'mysql',
+  logging: false,
+  timezone: '+04:00'
+
 });
 
-
-// const connection = mysql.createConnection({
-//   host: dbConfig.HOST,
-//   user: dbConfig.user,
-//   password: dbConfig.PASSWORD,
-//   database: dbConfig.DB,
-// });
-
-
-// connection.connect(error => {
-//   if (error) console.log('DB', error)
-//   console.log("Successfully connected to the database.");
-// });
+db
+.authenticate()
+.then(() => {
+  console.log('Connection has been established successfully.');
+})
+.catch(err => {
+  console.error('Unable to connect to the database:', err);
+});
 
 export default db;

@@ -1,0 +1,14 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 5px 50px
+}
+
+.header-links {
+    margin: 10px
+}
+
+.header-links a {
+    margin: 10px
+}

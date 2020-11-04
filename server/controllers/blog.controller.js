@@ -1,95 +1,74 @@
 import Blog from "../models/blog.model.js";
 
-
+// ADMIN
+// getBlogs is used in both ADMIN and SITE
 export const getBlogs = async (req, res) => {
     try {
-        const blogs = await Blog.getAll();
+        const blogs = await Blog.findAll({attributes: ['blog_id', 'blog_title', 'blog_body', 'blog_slug', 'blog_author']});
+
         res.send(blogs)
     } catch (error) {
         console.log(error)
     }
 };
-// export const getBlogs = (req, res) => {
-//     Blog.getAll((err, data) => {
-//         if (err) {
-//             console.log('CONTR 1', err);
-//         }
-//         else {
-//             res.send(data)
-//         } 
-//     });
-// };
-
-//PROMISE
 
 
-// ORIGINAL
-// export const getBlogById = (req, res) => {
-//     const { blogId } = req.params;
-
-//     Blog.findById(blogId, (err, data) => {
-//         if (err) {
-//           if (err.kind === "not_found") { res.status(404).send({ message: `No Blog found with id ${blogId}.` });
-//           } else {
-//             res.status(500).send({ message: `Error retrieving Blog with id: ${blogId}` });
-//           }
-//         } else res.send(data);
-//     });
-// };
-
-export const addBlog = (req, res) => {
-    // Validate request
-    if (!req.body) {
-        res.status(400).send({ message: "Content can not be empty!" });
-    }
-    const { blogTitle, blogBody } = req.body;
-    // console.log('Cont Create', blogTitle)
-
-    // Create a Blog
-    const blog = new Blog({ blogTitle, blogBody });
-
-    // Save Blog in the database
-    Blog.create(blog, (err, data) => {
-        if (err)
-            res.status(500).send({ message: err.message || "Some error occurred while creating the Customer." });
-        else res.send(data);
-    });
-};
-
-export const deleteBlog = (req, res) => {
-    const { blogId } = req.params;
-    
-    Blog.delete(blogId, (err, data) => {
-        if (err) {
-            if (err.kind === "not_found") {
-                res.status(404).send({ message: `Not Blog found with id: ${blogId}.` });
-            } else {
-                res.status(500).send({ message: `Could not delete Customer with id: ${blogId}` });
-            }
-        } else res.send({ message: `Blog was deleted successfully!` });
-    });
-};
-
-
-
-export const getBySlug = async (req, res) => {
-    const { slug } = req.params;
-    console.log('HERE ->', slug)
-
+export const getBlogsByAdmin = async (req, res) => {
     try {
-        const blog = await Blog.findBySlug(slug);
-        console.log('testttt', blog);
+        const blogs = await Blog.findAll({where: {site_name: req.user.site_name}, attributes: ['blog_id', 'blog_title', 'blog_body', 'blog_slug', 'blog_author']});
 
-        !blog ? res.status(404).json({ error: 'No blog with ID provided' }) : res.status(200).send(blog)
-
+        res.send(blogs)
     } catch (error) {
         console.log(error)
     }
 };
 
+export const addBlog = async (req, res) => {    
+    const { blogTitle, blogBody } = req.body;  
+    try {     
+        await Blog.create({
+            blog_title: blogTitle,
+            blog_body: blogBody,
+            blog_slug: blogTitle.toLowerCase().trim().replace(/ /g, '-'),
+            blog_author: req.user.user_name,
+            site_name: req.user.site
+
+        });    
+    } catch (error) {
+        console.log(error)
+    }
+};
+
+export const deleteBlog = async (req, res) => {
+    const { blogId } = req.params;  
+    try {
+        await Blog.destroy({ where: { blog_id: blogId }})
+        
+    } catch (error) {
+        console.log(error)
+    }
+};
+
+export const updateBlogById = async (req,res) => {
+    const { blogId } = req.params;
+    const { blogTitle, blogBody } = req.body;
+  
+    try {
+      const blog = await Blog.findOne({ where: { blog_id: blogId }});
+
+      if (blog.blog_title !== blogTitle) blog.blog_title = blogTitle;
+      if (blog.blog_body !== blogBody) blog.blog_body = blogBody;
+
+      await blog.save()
+
+      res.send(blog)
+    } catch (error) {
+      res.status(500).json({ error: error.message })
+    }
+  }
+
 export const getBlogById = async (req, res) => {
     const { blogId } = req.params;
-
     try {
         const blog = await Blog.findById(blogId);
 
@@ -101,9 +80,15 @@ export const getBlogById = async (req, res) => {
 };
 
 
-/*
+// SITE 
+export const getBySlug = async (req, res) => {
+    const { slug } = req.params;
+    try {
+        const blog = await Blog.findBySlug(slug);
 
-// Update a Customer identified by the customerId in the request
-exports.update = (req, res) => {
-  
-*/
+        !blog ? res.status(404).json({ error: 'No blog with ID provided' }) : res.status(200).send(blog)
+
+    } catch (error) {
+        console.log(error)
+    }
+};
