@@ -1,36 +1,22 @@
-import React, { useState, useContext } from 'react';
-import axios from 'axios';
-import Cookies from 'universal-cookie';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import Button from '@material-ui/core/Button';
 
 import './styles.css';
-import AuthApi from '../../context/Auth';
+import { userSignUp } from '../../actions/user';
 
 const SignUp = () => {
-  const { setIsAuth } = useContext(AuthApi);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [site, setSite] = useState('');
-  const cookies = new Cookies();
+  const dispatch = useDispatch();
 
   // Need error handling for emails already in use
   //   How to find display error message from API in reactjs
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const { data } = await axios.post('http://localhost:5000/users', { site, name, email, password });
-
-      const options = { path: '/', expires: new Date(new Date().getTime() + (24 * 60 * 60 * 1000)) };
-
-      cookies.set('token', data.token, options);
-      cookies.set('user', data.user.user_name, options);
-      cookies.set('site', data.user.site_name, options);
-      setIsAuth(true);
-
-      window.location.href = '/';
-    } catch (error) {
-      console.log(error);
-    }
+    dispatch(userSignUp(site, name, email, password));
   };
 
   return (
@@ -62,7 +48,7 @@ const SignUp = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button type="submit">Sign Up</button>
+          <Button variant="contained" color="primary" type="submit">Sign Up</Button>
           <a href="/sign-in">Already have an account? Sign in</a>
         </form>
       </div>

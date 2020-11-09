@@ -4,3 +4,8 @@ export { default as BlogList } from './BlogList/BlogList';
 export { default as SignUp } from './SignUp/Signup';
 export { default as SignIn } from './SignIn/SignIn';
 export { default as HomePage } from './HomePage/HomePage';
+export { default as AdminPage } from './GenAdmin/AdminPage';
+export { default as ChangePassword } from './GenAdmin/ChangePassword/ChangePassword';
+export { default as AddAccount } from './GenAdmin/AddAccount/AddAccount';
+export { default as ConfirmNewAccount } from './SignIn/ConfirmNewAccount/ConfirmNewAccount';
+export { default as Accounts } from './Accounts/Accounts';

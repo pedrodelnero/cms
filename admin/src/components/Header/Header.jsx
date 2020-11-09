@@ -1,24 +1,20 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import Cookies from 'universal-cookie';
-import axios from 'axios';
 
 import './styles.css';
 import AuthApi from '../../context/Auth';
+import { userLogOut } from '../../actions/user';
+
+const cookies = new Cookies();
 
 const Header = () => {
   const { isAuth, setIsAuth } = useContext(AuthApi);
-  const cookies = new Cookies();
+  const dispatch = useDispatch();
 
   const logOut = async () => {
-    await axios.post('http://localhost:5000/users/logout', null, {
-      headers: {
-        Authorization: `Bearer ${cookies.get('token')}`,
-      },
-    });
-    cookies.remove('site', { path: '/' });
-    cookies.remove('token', { path: '/' });
-    cookies.remove('user', { path: '/' });
+    dispatch(userLogOut());
     setIsAuth(false);
     window.location.href = '/';
   };
@@ -29,8 +25,11 @@ const Header = () => {
     <div className="header">
       <h1>CMS</h1>
       <div className="header-links">
+        <Link to="/">Home</Link>
+        <Link to="/profile">My Profile</Link>
         <Link to="/blogs">Blogs</Link>
         <Link to="/blog-form">Add Blog</Link>
+        <Link to="/accounts">Accounts</Link>
       </div>
       <div>
         <button type="button" onClick={() => logOut()}>Sign Out</button>

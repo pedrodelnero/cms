@@ -4,17 +4,14 @@ import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
 import { useDispatch, useSelector } from 'react-redux';
-import Cookies from 'universal-cookie';
+import Button from '@material-ui/core/Button';
 
 import { addBlog, updateBlog } from '../../actions/blogs';
 import './styles.css';
 
-const cookies = new Cookies();
-
 const BlogForm = () => {
   const { id } = useParams();
   const blog = useSelector((state) => state.blogs.find((blog) => blog.blog_id === Number(id)));
-
   const [editorState, setEditorState] = useState(id ? EditorState.createWithContent(convertFromRaw(JSON.parse(blog.blog_body))) : EditorState.createEmpty());
   const [blogTitle, setBlogTitle] = useState(blog?.blog_title || '');
   const dispatch = useDispatch();
@@ -53,7 +50,7 @@ const BlogForm = () => {
             onEditorStateChange={onEditorStateChange}
           />
         </div>
-        <button type="submit">{id ? 'Edit Blog' : 'Add Blog'}</button>
+        <Button variant="contained" color="primary" type="submit">{id ? 'Edit Blog' : 'Add Blog'}</Button>
       </form>
     </div>
   );
