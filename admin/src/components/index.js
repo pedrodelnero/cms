@@ -1,4 +1,5 @@
 export { default as Header } from './Header/Header';
+export { default as Footer } from './Footer/Footer';
 export { default as BlogForm } from './BlogForm/BlogForm';
 export { default as BlogList } from './BlogList/BlogList';
 export { default as SignUp } from './SignUp/Signup';
@@ -8,4 +9,7 @@ export { default as AdminPage } from './GenAdmin/AdminPage';
 export { default as ChangePassword } from './GenAdmin/ChangePassword/ChangePassword';
 export { default as AddAccount } from './GenAdmin/AddAccount/AddAccount';
 export { default as ConfirmNewAccount } from './SignIn/ConfirmNewAccount/ConfirmNewAccount';
-export { default as Accounts } from './Accounts/Accounts';
+export { default as EnhancedTable } from './Accounts/Accounts';
+export { default as SideNavBar } from './SideNavBar/SideNavBar';
+export { default as CreatePage } from './CreatePage/CreatePage';
+export { default as PageList } from './PageList/PageList';

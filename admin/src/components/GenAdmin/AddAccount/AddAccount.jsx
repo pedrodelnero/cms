@@ -1,63 +1,75 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import Cookies from 'universal-cookie';
-import { Button, FormControl, MenuItem, Select, InputLabel } from '@material-ui/core/';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Button, FormControl, InputLabel, MenuItem, Paper, Select, TextField, Typography } from '@material-ui/core/';
+import Alert from '@material-ui/lab/Alert';
 
-import './styles.css';
+import useStyles from './styles';
+import { addAccountByAdmin } from '../../../actions/user';
 
 const SignUp = () => {
+  const classes = useStyles();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = React.useState('');
-  const handleChange = (event) => setRole(event.target.value);
-  const cookies = new Cookies();
+  const error = useSelector((state) => state.error);
+  const [errorMessage, setErrorMessage] = React.useState(null);
+  const dispatch = useDispatch();
+  console.log(error);
 
-  // Need error handling for emails already in use
-  //   How to find display error message from API in reactjs
+  // if (error) setErrorMessage(error);
+
+  useEffect(() => {
+    if (error) {
+      setErrorMessage(error);
+    }
+  }, [error]);
+
+  // Issue with error handling => cannot add the window...href, it'll trigger regardless of error or not
+  // Have to figure out way to make it trigger when fields are full and to not trigger when one of the fields ir empty
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      await axios.post('http://localhost:5000/user/add-account', { email, password, role }, {
-        headers: { Authorization: `Bearer ${cookies.get('token')}` } });
-
-      window.location.href = '/';
-    } catch (error) {
-      console.log(error);
-    }
+    setErrorMessage(null);
+    dispatch(addAccountByAdmin(email, password, role));
+    // window.location.href = '/profile';
   };
 
   return (
-    <>
-      <h1>Add Account</h1>
-      <div className="add-account">
-        <form className="add-account-form" onSubmit={handleSubmit}>
-          <input
-            type="email"
-            placeholder="Email Address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Temporary password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <FormControl>
-            <InputLabel id="demo-customized-select-label">Role</InputLabel>
-            <Select
-              className="add-account-role"
-              value={role}
-              onChange={handleChange}
-            >
-              <MenuItem value="admin">Admin</MenuItem>
-              <MenuItem value="writer">Writer</MenuItem>
-            </Select>
-          </FormControl>
-          <Button variant="contained" color="primary" type="submit">Add User</Button>
-        </form>
-      </div>
-    </>
+    <Paper className={classes.root}>
+      <Typography color="inherit" variant="h2" component="div">Add account</Typography>
+      {!!errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+      <form className={classes.form} onSubmit={handleSubmit}>
+        <TextField
+          className={classes.field}
+          type="email"
+          placeholder="Email Address"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          variant="outlined"
+        />
+        <TextField
+          className={classes.field}
+          type="password"
+          placeholder="Temporary password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          variant="outlined"
+        />
+        <FormControl>
+          <InputLabel className={classes.inputLabel}>Role</InputLabel>
+          <Select
+            value={role}
+            onChange={(event) => setRole(event.target.value)}
+            variant="outlined"
+            className={classes.select}
+          >
+            <MenuItem value="admin">Admin</MenuItem>
+            <MenuItem value="writer">Writer</MenuItem>
+          </Select>
+        </FormControl>
+        <Button variant="contained" color="primary" type="submit">Add User</Button>
+      </form>
+    </Paper>
   );
 };
 

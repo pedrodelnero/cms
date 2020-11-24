@@ -1,40 +1,40 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import Cookies from 'universal-cookie';
+import AppBar from '@material-ui/core/AppBar';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import Typography from '@material-ui/core/Typography';
+import Toolbar from '@material-ui/core/Toolbar';
 
-import './styles.css';
+import useStyles from './styles.js';
 import AuthApi from '../../context/Auth';
-import { userLogOut } from '../../actions/user';
-
-const cookies = new Cookies();
 
 const Header = () => {
-  const { isAuth, setIsAuth } = useContext(AuthApi);
-  const dispatch = useDispatch();
+  const classes = useStyles();
+  const { isAuth, mobileOpen, setMobileOpen } = useContext(AuthApi);
 
-  const logOut = async () => {
-    dispatch(userLogOut());
-    setIsAuth(false);
-    window.location.href = '/';
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
   };
 
   if (!isAuth) return <div><h1>CMS</h1></div>;
 
   return (
-    <div className="header">
-      <h1>CMS</h1>
-      <div className="header-links">
-        <Link to="/">Home</Link>
-        <Link to="/profile">My Profile</Link>
-        <Link to="/blogs">Blogs</Link>
-        <Link to="/blog-form">Add Blog</Link>
-        <Link to="/accounts">Accounts</Link>
-      </div>
-      <div>
-        <button type="button" onClick={() => logOut()}>Sign Out</button>
-      </div>
-    </div>
+    <AppBar position="relative" className={classes.appBar}>
+      <Toolbar>
+        <IconButton
+          color="inherit"
+          aria-label="open drawer"
+          edge="start"
+          onClick={handleDrawerToggle}
+          className={classes.menuButton}
+        >
+          <MenuIcon />
+        </IconButton>
+        <Typography variant="h6" noWrap>
+          CMS SITE
+        </Typography>
+      </Toolbar>
+    </AppBar>
   );
 };
 

@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
-import Button from '@material-ui/core/Button';
+import { Button, Paper, TextField, Typography } from '@material-ui/core/';
 
-import './styles.css';
+import useStyles from './styles';
 
 const cookies = new Cookies();
 
 const ChangePassword = () => {
+  const classes = useStyles();
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
@@ -17,7 +18,7 @@ const ChangePassword = () => {
 
     const token = cookies.get('token');
     try {
-      const { data } = await axios.patch('http://localhost:5000/user/me', { currentPassword, newPassword, confirmNewPassword }, {
+      await axios.patch('http://localhost:5000/user/me', { currentPassword, newPassword, confirmNewPassword }, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -29,32 +30,34 @@ const ChangePassword = () => {
   };
 
   return (
-    <>
-      <div className="change-password">
-        <h3>Change password</h3>
-        <form className="change-password-form" onSubmit={handleSubmit}>
-          <input
-            type="password"
-            placeholder="Current password"
-            value={currentPassword}
-            onChange={(e) => setCurrentPassword(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="New password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Confirm new password"
-            value={confirmNewPassword}
-            onChange={(e) => setConfirmNewPassword(e.target.value)}
-          />
-          <Button variant="contained" color="primary" type="submit">Change password</Button>
-        </form>
-      </div>
-    </>
+    <Paper className={classes.root}>
+      <Typography color="inherit" variant="h2" component="div">Change password</Typography>
+
+      <form className={classes.form} onSubmit={handleSubmit}>
+        <TextField
+          type="password"
+          placeholder="Current password"
+          value={currentPassword}
+          onChange={(e) => setCurrentPassword(e.target.value)}
+          variant="outlined"
+        />
+        <TextField
+          type="password"
+          placeholder="New password"
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+          variant="outlined"
+        />
+        <TextField
+          type="password"
+          placeholder="Confirm new password"
+          value={confirmNewPassword}
+          onChange={(e) => setConfirmNewPassword(e.target.value)}
+          variant="outlined"
+        />
+        <Button variant="contained" color="primary" type="submit">Change password</Button>
+      </form>
+    </Paper>
   );
 };
 

@@ -40,7 +40,7 @@ const User = db.define("user", {
 });
 
 
-
+// Is the "new Error" in the catch correct?
 User.findByCredentials = async (email, password) => {
   try {
     const user = await User.findOne({ where: { user_email: email }})
@@ -54,7 +54,7 @@ User.findByCredentials = async (email, password) => {
     return user;
     
   } catch (error) {
-    console.log(error);
+     throw new Error(error);
   }
 };
 

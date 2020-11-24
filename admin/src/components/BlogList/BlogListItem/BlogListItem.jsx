@@ -1,11 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { Paper, Button, Typography } from '@material-ui/core';
 
-import './styles.css';
+import useStyles from './styles.js';
 import { deleteBlog } from '../../../actions/blogs';
 
 const BlogListItem = ({ blog: { blog_id, blog_title } }) => {
+  const classes = useStyles();
   const dispatch = useDispatch();
 
   const deleteBlogItem = (blogId) => {
@@ -14,14 +16,10 @@ const BlogListItem = ({ blog: { blog_id, blog_title } }) => {
   };
 
   return (
-    <div className="blog-list-item">
-      <div><p>{blog_id}</p></div>
-      <Link to={`/blog-form/${blog_id}`} key={blog_id}>
-        <div className="blog-list-item-title"><h3>{blog_title}</h3></div>
-      </Link>
-      <div><h3><button type="button" onClick={() => deleteBlogItem(blog_id)}>Delete</button></h3></div>
-
-    </div>
+    <Paper className="blog-list-item" elevation={3} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px', marginBottom: '10px' }}>
+      <Typography component={Link} to={`/blog-form/${blog_id}`} variant="h6" style={{ textDecoration: 'none', paddingRight: '50px' }} color="primary">{blog_title}</Typography>
+      <Button type="button" variant="outlined" color="secondary" style={{ maxHeight: '40px', minWidth: '85px' }} onClick={() => deleteBlogItem(blog_id)}>Delete</Button>
+    </Paper>
   );
 };
 

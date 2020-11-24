@@ -24,14 +24,18 @@ export const getBlogsByAdmin = async (req, res) => {
 };
 
 export const addBlog = async (req, res) => {    
-    const { blogTitle, blogBody } = req.body;  
+    const { blogTitle, blogBody, blogAuthor, savedSlug } = req.body; 
+    console.log('title: ', blogTitle,
+                'body: ', blogBody,
+                'author: ', blogAuthor,
+                'slug: ', savedSlug) 
     try {     
         await Blog.create({
             blog_title: blogTitle,
             blog_body: blogBody,
             blog_slug: blogTitle.toLowerCase().trim().replace(/ /g, '-'),
-            blog_author: req.user.user_name,
-            site_name: req.user.site
+            blog_author: blogAuthor,
+            site_name: req.user.site_name
 
         });    
     } catch (error) {
@@ -55,22 +59,23 @@ export const updateBlogById = async (req,res) => {
   
     try {
       const blog = await Blog.findOne({ where: { blog_id: blogId }});
-
+      
       if (blog.blog_title !== blogTitle) blog.blog_title = blogTitle;
       if (blog.blog_body !== blogBody) blog.blog_body = blogBody;
-
+      if (blog.blog_body !== blogBody) blog.blog_body = blogBody;
+      
       await blog.save()
-
+      
       res.send(blog)
     } catch (error) {
-      res.status(500).json({ error: error.message })
+        res.status(500).json({ error: error.message })
     }
-  }
+}
 
 export const getBlogById = async (req, res) => {
     const { blogId } = req.params;
     try {
-        const blog = await Blog.findById(blogId);
+        const blog = await Blog.findOne({ where: { blog_id: blogId }});
 
         !blog ? res.status(404).json({ error: 'No blog with ID provided' }) : res.status(200).send(blog)
 

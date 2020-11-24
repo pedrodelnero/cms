@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Cookies from 'universal-cookie';
 
-import { GET_USER, SIGN_UP, LOG_IN, LOG_OUT } from '../constants/actionTypes';
+import { GET_USER, SIGN_UP, LOG_IN, LOG_OUT, FAIL_SIGN_IN, FAIL_ADD_ACCOUNT } from '../constants/actionTypes';
 
 const cookies = new Cookies();
 const token = cookies.get('token');
@@ -30,29 +30,38 @@ export const userSignUp = (site, name, email, password) => async (dispatch) => {
 };
 
 export const userLogIn = (email, password) => async (dispatch) => {
-  const { data } = await userAPI.post('/login', { email, password });
+  try {
+    const { data } = await userAPI.post('/login', { email, password });
+    if (!data.user.user_name) {
+      cookies.set('site', data.user.site_name, options);
+      cookies.set('token', data.token, options);
+      window.location.href = '/confirm-new-account';
+    } else {
+      window.location.href = '/profile';
+      cookies.set('token', data.token, options);
+      cookies.set('user', data.user.user_name, options);
+      cookies.set('site', data.user.site_name, options);
+    }
 
-  console.log(data);
-
-  if (!data.user.user_name) {
-    cookies.set('site', data.user.site_name, options);
-    cookies.set('token', data.token, options);
-    window.location.href = '/confirm-new-account';
-  } else {
-    window.location.href = '/profile';
-    cookies.set('token', data.token, options);
-    cookies.set('user', data.user.user_name, options);
-    cookies.set('site', data.user.site_name, options);
+    dispatch({ type: LOG_IN });
+  } catch (error) {
+    dispatch({ type: FAIL_SIGN_IN, payload: error.response.data });
   }
-
-  dispatch({ type: LOG_IN });
 };
 
 export const userLogOut = () => async (dispatch) => {
+  const { data } = await userAPI.post('/logout');
   cookies.remove('site', { path: '/' });
   cookies.remove('token', { path: '/' });
   cookies.remove('user', { path: '/' });
-  await userAPI.post('/logout');
 
   dispatch({ type: LOG_OUT });
+};
+
+export const addAccountByAdmin = (email, password, role) => async (dispatch) => {
+  try {
+    await userAPI.post('/add-account', { email, password, role });
+  } catch (error) {
+    dispatch({ type: FAIL_ADD_ACCOUNT, payload: error.response.data.message });
+  }
 };

@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { Button, Grid, Paper, Typography } from '@material-ui/core/';
 
 import { getUser } from '../../actions/user';
 
-import './styles.css';
+import { useStyles } from './styles';
 
 const AdminPage = () => {
+  const classes = useStyles();
   const dispatch = useDispatch();
 
   const { user_email } = useSelector((state) => state.user);
@@ -16,19 +18,19 @@ const AdminPage = () => {
   }, [dispatch]);
 
   return (
-    <div className="account-page">
-      <h1 className="account-page-title">Account Details</h1>
-      <div className="account-page-body">
-        <div className="account-email">
-          <h2>Email: </h2>
-          <p>{user_email}</p>
-        </div>
-        <div className="account-settings">
-          <Link to="/password">Change your password</Link>
-          <Link to="/add-account">Add account to site</Link>
-        </div>
-      </div>
-    </div>
+    <Paper className={classes.root}>
+      <Typography variant="h3" align="center" style={{ marginBottom: '30px' }}>Account Details</Typography>
+      <Grid container spacing={3}>
+        <Grid item xs={12} className={classes.info}>
+          <Typography variant="subtitle1" component="div">Email:</Typography>
+          <Typography variant="body1" component="div">{user_email}</Typography>
+        </Grid>
+        <Grid item xs={12} className={classes.actions}>
+          <Button component={Link} to="/password" variant="outlined">Change your password</Button>
+          <Button component={Link} to="/add-account" variant="outlined">Add account to site</Button>
+        </Grid>
+      </Grid>
+    </Paper>
   );
 };
 

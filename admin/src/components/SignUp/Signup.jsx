@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import Button from '@material-ui/core/Button';
+import { Button, Paper, TextField, Typography } from '@material-ui/core/';
 
-import './styles.css';
+import useStyles from './styles';
 import { userSignUp } from '../../actions/user';
 
 const SignUp = () => {
+  const classes = useStyles();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -20,39 +22,41 @@ const SignUp = () => {
   };
 
   return (
-    <>
-      <h1>Sign up to create your store</h1>
-      <div className="sign-up">
-        <form className="sign-up-form" onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Site Name (can be changed later)"
-            value={site}
-            onChange={(e) => setSite(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Full Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <input
-            type="email"
-            placeholder="Email Address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <Button variant="contained" color="primary" type="submit">Sign Up</Button>
-          <a href="/sign-in">Already have an account? Sign in</a>
-        </form>
-      </div>
-    </>
+    <Paper className={classes.root}>
+      <Typography color="inherit" variant="h2" component="div">Sign up to create your store</Typography>
+      <form className={classes.form} onSubmit={handleSubmit}>
+        <TextField
+          type="text"
+          placeholder="Site Name (can be changed later)"
+          value={site}
+          onChange={(e) => setSite(e.target.value)}
+          variant="outlined"
+        />
+        <TextField
+          type="text"
+          placeholder="Full Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          variant="outlined"
+        />
+        <TextField
+          type="email"
+          placeholder="Email Address"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          variant="outlined"
+        />
+        <TextField
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          variant="outlined"
+        />
+        <Button variant="contained" color="primary" type="submit">Sign Up</Button>
+      </form>
+      <Typography component={Link} to="sign-in" variant="h6" align="center" style={{ marginTop: '20px', textDecoration: 'none' }}>Already have an account? Sign in</Typography>
+    </Paper>
   );
 };
 

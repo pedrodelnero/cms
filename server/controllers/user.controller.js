@@ -3,8 +3,6 @@ import Roles from '../models/roles.model.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
-// console.log(Roles)
-
 export const addUser = async (req, res) => {    
   const { site, name, email, password } = req.body;  
   
@@ -32,18 +30,25 @@ export const loginUser = async (req, res) => {
   const { email, password } = req.body;
   
   try {
-    const user = await User.findByCredentials(email, password);
-    const token = jwt.sign({ user_name: user.user_name, user_role: user.user_role, site_name: user.site_name }, process.env.JWT_SECRET, { expiresIn: '24h' });
-    
-    res.send({ user, token });
+    const user = await User.findByCredentials(email, password, res);
+    if (!user) {
+      res.status(404).send('No account found')
+    } else {
+      const token = jwt.sign({ user_name: user.user_name, user_role: user.user_role, site_name: user.site_name }, process.env.JWT_SECRET, { expiresIn: '24h' });
+      res.send({ user, token });
+
+    }
   } catch (error) {
-    res.status(500).send({message: error.message});
+    // console.log('err', error)
+    res.status(404).send('Incorrect email and/or password')
   }
 };
 
 export const logoutUser = async (req, res) => {
+  console.log('Log out test 1')
   try {  
-    res.json({ message: 'Logged out' });
+    console.log('Log out test 2')
+    res.status(200).send('Logged out');
   } catch (error) {
     res.status(500).json({ message: error.message});
   }
@@ -98,19 +103,24 @@ export const updateUserPassword = async (req, res) => {
 export const addNewUserByAdmin = async (req, res) => {
   const { email, password, role } = req.body;
   const { site_name } = req.user;
+  console.log('role:', role, 'password:', password.length)
   
   try {
     let user = await User.findOne({ where: { user_email: email }});
     if (user) return res.status(400).send({ message: "User Already Exists" }); 
 
-    user = await User.create({
-      site_name: site_name,
-      user_email: email,
-      user_password: bcrypt.hashSync(password, 8),
-      user_role: role
-    });
-    
-    res.send({ user });
+    if (!email || !password || !role) {
+      throw new Error('Missing field')
+    } else {
+        user = await User.create({
+          site_name: site_name,
+          user_email: email,
+          user_password: bcrypt.hashSync(password, 8),
+          user_role: role
+        });
+          
+        res.send({ user });
+    }
   } catch (error) {
     res.status(500).send({message: error.message});
   }
@@ -118,8 +128,6 @@ export const addNewUserByAdmin = async (req, res) => {
 
 export const getUsers = async (req, res) => {
   const { user_role, site_name } = req.user;
-
-  // console.log(1, user_role, ' | ', site_name)
   
   try {
     if (user_role === Roles.OWNER || user_role === Roles.ADMIN) {
@@ -128,6 +136,25 @@ export const getUsers = async (req, res) => {
       res.send(users)
     } else {
       res.send({message: 'Not available to access'})
+    }
+  } catch (error) {
+    res.status(500).send({message: error.message});
+  }
+};
+
+export const deleteUsers = async (req, res) => {
+  const { user_role } = req.user;
+  const { id } = req.params;
+  console.log('11111', id)
+
+  try {
+    if (user_role === Roles.ADMIN || user_role === Roles.OWNER) {
+        const user = await User.findOne({ where: { user_id: id }})
+        await user.destroy();
+
+        res.status(200).send('Deleted.');
+    } else {
+      throw new Error('No Access')
     }
   } catch (error) {
     res.status(500).send({message: error.message});

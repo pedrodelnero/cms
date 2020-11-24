@@ -8,7 +8,7 @@ const auth = async (req, res, next) => {
             if (err) return res.status(403);
             req.user = user;
         });
-
+        
         next();
     } catch (error) {
         res.status(401).json({ error: 'Please authenticate.' })
