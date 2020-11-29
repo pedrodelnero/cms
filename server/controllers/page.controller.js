@@ -55,7 +55,7 @@ export const deletePage = async (req, res) => {
 
 export const updatePageById = async (req,res) => {
     const { pageId } = req.params;
-    const { pageTitle, pageBody } = req.body;
+    const { pageTitle, pageBody, pageSlug, metaKeywords, metaDescription, searchKeywords} = req.body;
   
     try {
       const page = await Page.findOne({ where: { page_id: pageId }});
@@ -63,6 +63,11 @@ export const updatePageById = async (req,res) => {
       if (page.page_title !== pageTitle) page.page_title = pageTitle;
       if (page.page_body !== pageBody) page.page_body = pageBody;
       if (page.page_body !== pageBody) page.page_body = pageBody;
+      
+      if (page.page_slug !== pageSlug) page.page_slug = pageSlug;
+      if (page.page_metadata_keywords !== metaKeywords) page.page_metadata_keywords = metaKeywords;
+      if (page.page_metadata_description !== metaDescription) page.page_metadata_description = metaDescription;
+      if (page.page_search_keywords !== searchKeywords) page.page_search_keywords = searchKeywords;
       
       await page.save()
       

@@ -10,7 +10,6 @@ const BlogPost = () => {
     const router = useRouter()
     const [ blogPost, setBlogPost ] = useState(null);
     const { blog } = router.query; // think-again => ''
-    console.log(222, blog)
 
     const loadBlogPost = async () => {
         if(blog) {
@@ -30,7 +29,8 @@ const BlogPost = () => {
       }
   
     return (
-        <Layout>
+        <Layout title={blogPost.blog_title}>
+            {console.log(blogPost)}
             <h1>Post Title: {blogPost.blog_title}</h1>
             <h3>Post Body:</h3>
             <div dangerouslySetInnerHTML={{__html: draftToHtml(JSON.parse(blogPost.blog_body))}}></div>

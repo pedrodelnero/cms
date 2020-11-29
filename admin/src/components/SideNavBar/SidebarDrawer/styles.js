@@ -26,24 +26,33 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'row',
   },
-  logout: {
-    marginTop: theme.spacing(5),
-    marginBottom: 0,
-  },
   iconDiv: {
-    justifyContent: 'end',
     // border: '1px solid red',
+  },
+  logout: {
+    // marginTop: theme.spacing(5),
+    // alignItems: 'end',
   },
   icon: {
     // border: '1px solid black',
     marginLeft: '20px',
-    // marginRight: 0,
   },
   acc: {
     margin: 0,
   },
   typography: {
     padding: theme.spacing(2),
+  },
+  button: {
+    // backgroundColor: 'red',
+    border: '5px solid white',
+    // width: '200px',
+    [theme.breakpoints.down('sm')]: {
+      width: '300px',
+    },
+    [theme.breakpoints.up('sm')]: {
+      width: '200px',
+    },
   },
 }));
 

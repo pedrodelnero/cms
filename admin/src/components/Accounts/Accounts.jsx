@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow, TableSortLabel, Toolbar, Typography, Paper, Checkbox, IconButton, Tooltip, FormControlLabel, Switch } from '@material-ui/core/';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, Toolbar, Typography, Paper, Checkbox, IconButton, Tooltip, FormControlLabel, Switch } from '@material-ui/core/';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 
@@ -83,7 +83,7 @@ function EnhancedTableHead(props) {
 
 const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
-  const { numSelected } = props;
+  const { numSelected, deleteSelectedUsers } = props;
 
   return (
     <Toolbar className={`${classes.root} ${numSelected > 0 && classes.highlight}`}>
@@ -100,7 +100,7 @@ const EnhancedTableToolbar = (props) => {
       {numSelected > 0 ? (
         <Tooltip title="Delete">
           <IconButton aria-label="delete">
-            <DeleteIcon />
+            <DeleteIcon onClick={deleteSelectedUsers} />
           </IconButton>
         </Tooltip>
       ) : (
@@ -190,7 +190,7 @@ export default function EnhancedTable() {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar numSelected={selected.length} deleteSelectedUsers={deleteSelectedUsers} />
         <TableContainer>
           <Table
             className={classes.table}
@@ -245,21 +245,6 @@ export default function EnhancedTable() {
             </TableBody>
           </Table>
         </TableContainer>
-        {/* <TableRow className={classes.footerRow}>
-          <TableCell colSpan={3}>
-            { selected.length > 0
-                    && (
-                    <Button
-                      className={classes.button}
-                      variant="contained"
-                      color="secondary"
-                      type="button"
-                      onClick={deleteSelectedUsers}
-                    >Delete selected users
-                    </Button>
-                    )}
-
-          </TableCell> */}
         <TablePagination
           className={classes.footerPagination}
           rowsPerPageOptions={[5, 10, 25]}

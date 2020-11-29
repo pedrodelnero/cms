@@ -25,10 +25,7 @@ export const getBlogsByAdmin = async (req, res) => {
 
 export const addBlog = async (req, res) => {    
     const { blogTitle, blogBody, blogAuthor, savedSlug } = req.body; 
-    console.log('title: ', blogTitle,
-                'body: ', blogBody,
-                'author: ', blogAuthor,
-                'slug: ', savedSlug) 
+    
     try {     
         await Blog.create({
             blog_title: blogTitle,
@@ -88,8 +85,9 @@ export const getBlogById = async (req, res) => {
 // SITE 
 export const getBySlug = async (req, res) => {
     const { slug } = req.params;
+    console.log('')
     try {
-        const blog = await Blog.findBySlug(slug);
+        const blog = await Blog.findOne({where: { blog_slug: slug}});
 
         !blog ? res.status(404).json({ error: 'No blog with ID provided' }) : res.status(200).send(blog)
 

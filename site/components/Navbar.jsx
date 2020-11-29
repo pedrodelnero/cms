@@ -1,6 +1,15 @@
 import Link from 'next/link';
+import axios from 'axios';
 
-const Navbar = () => (
+
+const Navbar = () => {
+  // const [siteName, setSiteName] = useState('')
+
+  // useEffect(() => {
+  //   axios.get('http://localhost:5000/site').then(res => setSiteName(res.data)).catch(err => console.log(err))
+  // }, [])
+  
+  return (
   <nav className="navbar navbar-expand navbar-dark bg-dark mb-4">
     <div className="container">
       <a className="navbar-brand" href="/">Pedro's Blog</a>
@@ -13,6 +22,6 @@ const Navbar = () => (
       </div>
     </div>
   </nav>
-);
+)};
 
 export default Navbar;

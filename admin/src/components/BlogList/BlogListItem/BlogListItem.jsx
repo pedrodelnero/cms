@@ -16,10 +16,12 @@ const BlogListItem = ({ blog: { blog_id, blog_title } }) => {
   };
 
   return (
-    <Paper className="blog-list-item" elevation={3} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px', marginBottom: '10px' }}>
-      <Typography component={Link} to={`/blog-form/${blog_id}`} variant="h6" style={{ textDecoration: 'none', paddingRight: '50px' }} color="primary">{blog_title}</Typography>
-      <Button type="button" variant="outlined" color="secondary" style={{ maxHeight: '40px', minWidth: '85px' }} onClick={() => deleteBlogItem(blog_id)}>Delete</Button>
-    </Paper>
+    <>
+      <Paper elevation={3} className={classes.root}>
+        <Typography component={Link} to={`/blog-form/${blog_id}`} variant="h6" color="primary" className={classes.title}>{blog_title}</Typography>
+        <Button type="button" variant="outlined" color="secondary" className={classes.button} onClick={() => deleteBlogItem(blog_id)}>Delete</Button>
+      </Paper>
+    </>
   );
 };
 

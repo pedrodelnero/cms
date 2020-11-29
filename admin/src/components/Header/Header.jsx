@@ -16,7 +16,7 @@ const Header = () => {
     setMobileOpen(!mobileOpen);
   };
 
-  if (!isAuth) return <div><h1>CMS</h1></div>;
+  if (!isAuth) return (<div><Typography variant="h5" noWrap className={classes.title}>CMS SITE</Typography></div>);
 
   return (
     <AppBar position="relative" className={classes.appBar}>

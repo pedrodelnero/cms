@@ -5,7 +5,7 @@ export const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     padding: theme.spacing(0, 1),
-    border: '1px solid red',
+    // border: '1px solid red',
   },
   info: {
     display: 'flex',

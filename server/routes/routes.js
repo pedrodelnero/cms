@@ -2,6 +2,7 @@ import express from 'express';
 import { getBlogs, getBlogsByAdmin, addBlog, deleteBlog, updateBlogById, getBlogById, getBySlug } from '../controllers/blog.controller.js'
 import { addUser, loginUser, logoutUser, getUser, updateUserPassword, addNewUserByAdmin, getUsers, deleteUsers } from '../controllers/user.controller.js'
 import { addPage, getPages, getPageById, deletePage, updatePageById } from '../controllers/page.controller.js'
+import { addSite, getSite, updateSiteInfo, getSiteById } from '../controllers/site.controller.js'
 import auth from '../middleware/auth.js';
 
 const router = express.Router();
@@ -29,6 +30,10 @@ router.post('/user/add-account', auth, addNewUserByAdmin)
 router.get('/user/all', auth, getUsers)
 router.delete('/user/:id', auth, deleteUsers)
 
+router.get('/site/:siteName', getSite)
+router.get('/sites/:siteId', getSiteById)
+router.post('/site/add', addSite)
+router.patch('/site/update', auth, updateSiteInfo)
 
 
 export default router;

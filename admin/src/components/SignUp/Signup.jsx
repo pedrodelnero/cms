@@ -5,6 +5,7 @@ import { Button, Paper, TextField, Typography } from '@material-ui/core/';
 
 import useStyles from './styles';
 import { userSignUp } from '../../actions/user';
+import { addSite } from '../../actions/site';
 
 const SignUp = () => {
   const classes = useStyles();
@@ -18,12 +19,13 @@ const SignUp = () => {
   //   How to find display error message from API in reactjs
   const handleSubmit = async (e) => {
     e.preventDefault();
+    dispatch(addSite(site, email));
     dispatch(userSignUp(site, name, email, password));
   };
 
   return (
     <Paper className={classes.root}>
-      <Typography color="inherit" variant="h2" component="div">Sign up to create your store</Typography>
+      <Typography color="inherit" variant="h4" className={classes.title}>Sign up to create your store</Typography>
       <form className={classes.form} onSubmit={handleSubmit}>
         <TextField
           type="text"

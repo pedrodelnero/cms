@@ -34,7 +34,7 @@ const Createpage = () => {
     } else {
       dispatch(addPage({ pageTitle, pageBody, pageSlug, metaKeywords, metaDescription, searchKeywords }));
     }
-    // window.location.href = '/';
+    window.location.href = '/pages';
   };
 
   const onEditorStateChange = (richTextEditorState) => setEditorState(richTextEditorState);
@@ -76,14 +76,13 @@ const Createpage = () => {
               <Editor
                 placeholder="Write here..."
                 editorState={editorState}
-                wrapperClassName={classes.body}
+                wrapperClassName={classes.bodyWrapper}
                 editorClassName={classes.bodyInput}
-                toolbarClassName={classes.toolbar}
+                toolbarClassName={classes.bodyToolbar}
                 onEditorStateChange={onEditorStateChange}
               />
             </div>
           </div>
-
         </Paper>
         <Paper className={classes.root}>
           <Typography variant="h4" className={classes.subTitle}>Advanced Options</Typography>

@@ -45,9 +45,7 @@ export const loginUser = async (req, res) => {
 };
 
 export const logoutUser = async (req, res) => {
-  console.log('Log out test 1')
   try {  
-    console.log('Log out test 2')
     res.status(200).send('Logged out');
   } catch (error) {
     res.status(500).json({ message: error.message});
@@ -145,7 +143,6 @@ export const getUsers = async (req, res) => {
 export const deleteUsers = async (req, res) => {
   const { user_role } = req.user;
   const { id } = req.params;
-  console.log('11111', id)
 
   try {
     if (user_role === Roles.ADMIN || user_role === Roles.OWNER) {

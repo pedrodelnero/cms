@@ -55,7 +55,7 @@ export const userLogOut = () => async (dispatch) => {
   cookies.remove('token', { path: '/' });
   cookies.remove('user', { path: '/' });
 
-  dispatch({ type: LOG_OUT });
+  dispatch({ type: LOG_OUT, payload: data });
 };
 
 export const addAccountByAdmin = (email, password, role) => async (dispatch) => {

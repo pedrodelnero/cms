@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   subTitle: {
-    display: 'flex',
+    // display: 'flex',
     marginBottom: theme.spacing(1),
     // border: '1px solid blue',
   },
@@ -38,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   field: {
+    marginBottom: theme.spacing(1),
     [theme.breakpoints.down('md')]: {
       width: '100%',
     },
@@ -53,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
       marginBottom: theme.spacing(1),
     },
   },
-  body: {
+  bodyWrapper: {
     border: '1px solid #C3C4C6',
     borderRadius: '5px',
   },
@@ -62,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
     height: '400px',
     padding: '10px',
   },
-  toolbar: {
+  bodyToolbar: {
     marginBottom: theme.spacing(0),
   },
   button: {

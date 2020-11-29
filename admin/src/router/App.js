@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Switch } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
-import { CreatePage, PageList, Header, Footer, BlogForm, BlogList, SignUp, SignIn, AdminPage, HomePage, ChangePassword, AddAccount, ConfirmNewAccount, EnhancedTable, SideNavBar } from '../components';
+import { CreatePage, PageList, SiteProfile, Header, Footer, BlogForm, BlogList, SignUp, SignIn, AdminPage, HomePage, ChangePassword, AddAccount, ConfirmNewAccount, EnhancedTable, SideNavBar } from '../components';
 import AuthApi from '../context/Auth';
 import useStyles from './styles.js';
 import PrivateRoute from './PrivateRoute/PrivateRoute';
@@ -37,13 +37,14 @@ const App = () => {
                 <PrivateRoute path="/password" component={ChangePassword} authProp={{ isAuth }} />
                 <PrivateRoute path="/add-account" component={AddAccount} authProp={{ isAuth }} />
                 <PrivateRoute path="/confirm-new-account" component={ConfirmNewAccount} authProp={{ isAuth }} />
+                <PrivateRoute path="/settings/profile" component={SiteProfile} authProp={{ isAuth }} />
                 <PublicRoute path="/sign-up" component={SignUp} authProp={{ isAuth }} />
                 <PublicRoute path="/sign-in" component={SignIn} authProp={{ isAuth }} />
               </Switch>
             </main>
           </div>
         </Router>
-        <Footer />
+        <Footer className={classes.footer} />
       </div>
     </AuthApi.Provider>
   );

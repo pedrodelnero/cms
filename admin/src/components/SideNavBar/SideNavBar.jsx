@@ -1,8 +1,6 @@
 import React, { useContext } from 'react';
 import { useTheme } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import Hidden from '@material-ui/core/Hidden';
-// import ListItemIcon from '@material-ui/core/ListItemIcon';
+import { Drawer, Hidden } from '@material-ui/core/';
 
 import useStyles from './styles.js';
 import SidebarDrawer from './SidebarDrawer/SidebarDrawer';
@@ -39,7 +37,7 @@ const SideNavBar = () => {
             <SidebarDrawer />
           </Drawer>
         </Hidden>
-        <Hidden xsDown style={{ height: '100%' }}>
+        <Hidden xsDown>
           <Drawer
             style={{ height: '100%' }}
             classes={{

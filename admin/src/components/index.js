@@ -13,3 +13,4 @@ export { default as EnhancedTable } from './Accounts/Accounts';
 export { default as SideNavBar } from './SideNavBar/SideNavBar';
 export { default as CreatePage } from './CreatePage/CreatePage';
 export { default as PageList } from './PageList/PageList';
+export { default as SiteProfile } from './SiteProfile/SiteProfile';

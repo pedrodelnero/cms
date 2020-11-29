@@ -4,7 +4,7 @@ import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, TextField, Typography, InputAdornment } from '@material-ui/core/';
+import { Button, Paper, TextField, Typography } from '@material-ui/core/';
 
 import { addBlog, updateBlog, getBlogById } from '../../actions/blogs';
 import useStyles from './styles.js';
@@ -22,10 +22,8 @@ const BlogForm = () => {
   // const [savedSlug, setSavedSlug] = useState('');
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getBlogById(id));
-  }, [dispatch]);
-
-  console.log('000', blogSlug);
+    if (id) dispatch(getBlogById(id));
+  }, [id, dispatch]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -37,76 +35,62 @@ const BlogForm = () => {
     } else {
       dispatch(addBlog({ blogTitle, blogBody, blogAuthor, blogSlug }));
     }
-    // window.location.href = '/';
+    window.location.href = '/blogs';
   };
 
   const onEditorStateChange = (richTextEditorState) => setEditorState(richTextEditorState);
 
-  // const saveSlug = () => {
-  //   setSavedSlug(blogSlug);
-  // };
-
   return (
-    <div className={classes.paper}>
-      <Typography variant="h4">{id ? 'Edit Blog' : 'Add Blog'}</Typography>
-      <form className={classes.form} onSubmit={handleSubmit}>
-        <Typography variant="h5" className={classes.title}>Blog Title</Typography>
-        <TextField
-          className={classes.field}
-          type="text"
-          placeholder="Title"
-          variant="outlined"
-          value={blogTitle}
-          onChange={(e) => {
-            setBlogTitle(e.target.value); // abc
-            setBlogSlug(`/${e.target.value.toLowerCase().trim().replace(/ /g, '-')}`);
-          }}
-        />
-        <Typography variant="h5" className={classes.title}>Blog Body</Typography>
-        <div className={classes.field}>
-          <Editor
-            placeholder="Write here..."
-            editorState={editorState}
-            wrapperClassName={classes.body}
-            editorClassName={classes.bodyInput}
-            toolbarClassName={classes.toolbar}
-            onEditorStateChange={onEditorStateChange}
+    <>
+      <Typography variant="h3" style={{ marginBottom: 20 }}>{id ? 'Edit Blog' : 'Add Blog'}</Typography>
+      <form onSubmit={handleSubmit}>
+        <Paper className={classes.root}>
+          <Typography variant="h5" className={classes.subTitle}>Blog Title</Typography>
+          <TextField
+            className={classes.field}
+            type="text"
+            placeholder="Title"
+            variant="outlined"
+            value={blogTitle}
+            onChange={(e) => {
+              setBlogTitle(e.target.value); // abc
+              setBlogSlug(`/${e.target.value.toLowerCase().trim().replace(/ /g, '-')}`);
+            }}
           />
-        </div>
-        <Typography variant="h5" className={classes.title}>Author</Typography>
-        <TextField
-          className={classes.field}
-          type="text"
-          placeholder="Author"
-          variant="outlined"
-          value={blogAuthor}
-          onChange={(e) => setBlogAuthor(e.target.value)}
-        />
-        <Typography variant="h5" className={classes.title}>Slug</Typography>
-        <TextField
-          className={classes.slug}
-          type="text"
-          placeholder="Slug"
-          variant="outlined"
-          value={blogSlug}
+          <Typography variant="h5" className={classes.subTitle}>Blog Body</Typography>
+          <div className={classes.field}>
+            <Editor
+              placeholder="Write here..."
+              editorState={editorState}
+              wrapperClassName={classes.bodyWrapper}
+              editorClassName={classes.bodyInput}
+              toolbarClassName={classes.bodyToolbar}
+              onEditorStateChange={onEditorStateChange}
+            />
+          </div>
+          <Typography variant="h5" className={classes.subTitle}>Author</Typography>
+          <TextField
+            className={classes.field}
+            type="text"
+            placeholder="Author"
+            variant="outlined"
+            value={blogAuthor}
+            onChange={(e) => setBlogAuthor(e.target.value)}
+          />
+          <Typography variant="h5" className={classes.subTitle}>Slug</Typography>
+          <TextField
+            className={classes.slug}
+            type="text"
+            placeholder="Slug"
+            variant="outlined"
+            value={blogSlug}
           // onChange={setSlugonChange}
-          onChange={(e) => setBlogSlug(e.target.value)}
-          // InputProps={{
-          //   classes: { input: classes.slugInput },
-          //   endAdornment: (
-          //     <InputAdornment position="end">
-          //       <Button
-          //         variant="contained"
-          //         size="medium"
-          //         onClick={saveSlug}
-          //       >Save
-          //       </Button>
-          //     </InputAdornment>
-          //   ) }}
-        />
+            onChange={(e) => setBlogSlug(e.target.value)}
+          />
+        </Paper>
         <Button className={classes.button} variant="contained" color="primary" type="submit">{id ? 'Edit Blog' : 'Add Blog'}</Button>
       </form>
-    </div>
+    </>
   );
 };
 

@@ -22,12 +22,11 @@ const SignUp = () => {
 
   return (
     <Paper className={classes.root}>
-      <Typography className={classes.title} color="inherit" variant="h2" component="div">Sign into your store</Typography>
+      <Typography className={classes.title} color="inherit" variant="h4">Sign into your store</Typography>
       {!!errorMessage && <Alert severity="error">{errorMessage}</Alert>}
       <form className={classes.form} onSubmit={handleSubmit}>
         <TextField
           error={!!errorMessage}
-          id="outlined-error-helper-text"
           variant="outlined"
           inputProps={{ min: 0, style: { textAlign: 'center' } }}
           type="email"
@@ -47,7 +46,7 @@ const SignUp = () => {
         />
         <Button variant="contained" color="primary" type="submit">Sign In</Button>
       </form>
-      <Typography component={Link} to="sign-up" variant="h6" align="center" style={{ marginTop: '20px', textDecoration: 'none' }}>Don't have an account? Create account</Typography>
+      <Typography component={Link} to="sign-up" variant="h6" align="center" className={classes.signUplink}>Don't have an account? Create account</Typography>
     </Paper>
   );
 };

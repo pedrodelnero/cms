@@ -21,3 +21,7 @@ export const DELETE_USERS = 'DELETE_USERS';
 
 export const FAIL_SIGN_IN = 'FAIL_SIGN_IN';
 export const FAIL_ADD_ACCOUNT = 'FAIL_ADD_ACCOUNT';
+
+export const ADD_SITE = 'ADD_SITE';
+export const GET_SITE = 'GET_SITE';
+export const UPDATE_SITE_INFO = 'UPDATE_SITE_INFO';

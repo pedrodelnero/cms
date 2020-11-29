@@ -16,9 +16,9 @@ const PageListItem = ({ page: { page_id, page_title } }) => {
   };
 
   return (
-    <Paper className="blog-list-item" elevation={3} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px', marginBottom: '10px' }}>
-      <Typography component={Link} to={`/page-form/${page_id}`} variant="h6" style={{ textDecoration: 'none', paddingRight: '50px' }} color="primary">{page_title}</Typography>
-      <Button type="button" variant="outlined" color="secondary" style={{ maxHeight: '40px', minWidth: '85px' }} onClick={() => deletePageItem(page_id)}>Delete</Button>
+    <Paper elevation={3} className={classes.root}>
+      <Typography component={Link} to={`/page-form/${page_id}`} variant="h6" className={classes.title} color="primary">{page_title}</Typography>
+      <Button type="button" variant="outlined" color="secondary" className={classes.button} onClick={() => deletePageItem(page_id)}>Delete</Button>
     </Paper>
   );
 };

@@ -15,6 +15,10 @@ const useStyles = makeStyles((theme) => ({
       display: 'none',
     },
   },
+  title: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
 }));
 
 export default useStyles;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { Grid, IconButton, Accordion, AccordionDetails, AccordionSummary, Popover, Divider, ListItem, ListItemText, List, Typography, Hidden } from '@material-ui/core/';
+import { Accordion, AccordionDetails, AccordionSummary, Button, Divider, Grid, Hidden, IconButton, ListItem, ListItemText, List, Popover, Typography } from '@material-ui/core/';
 import { useTheme } from '@material-ui/core/styles';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
@@ -18,17 +18,22 @@ const SidebarDrawer = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const dispatch = useDispatch();
   const location = useLocation();
+  const [expanded, setExpanded] = React.useState(false);
+
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
 
   const logOut = async () => {
     dispatch(userLogOut());
-    window.location.href = '/';
+    window.location.href = '/sign-in';
   };
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
-  const handleClick = (event) => {
+  const handlePopover = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -38,15 +43,13 @@ const SidebarDrawer = () => {
 
   useEffect(() => {
     setMobileOpen(false);
-  }, [location.pathname]);
+  }, [setMobileOpen, location.pathname]);
 
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
 
-  // return <div style={{ height: '100vh', backgroundColor: 'red' }}>test</div>;
-
   return (
-    <Grid container direction="column" style={{ height: '100%' }}>
+    <Grid container direction="column">
       <Grid container direction="row">
         <Grid item className={classes.iconDiv}>
           <div className={classes.toolbar} />
@@ -68,79 +71,78 @@ const SidebarDrawer = () => {
         <List component="nav">
           <Accordion>
             <ListItem button component={Link} to="/">
-              {/* <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon> */}
               <ListItemText primary="Home" />
             </ListItem>
           </Accordion>
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-              className={classes.acc}
-            >
+          <Accordion
+            expanded={expanded === 2}
+            key={2}
+            onChange={handleChange(2)}
+          >
+            <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header" className={classes.acc}>
               <Typography className={classes.heading}>Pages</Typography>
             </AccordionSummary>
             <AccordionDetails>
               <ListItem button component={Link} to="/pages">
-                {/* <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon> */}
                 <ListItemText primary="All Pages" />
               </ListItem>
             </AccordionDetails>
             <AccordionDetails>
               <ListItem button component={Link} to="/page-form">
-                {/* <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon> */}
                 <ListItemText primary="Add Page" />
               </ListItem>
             </AccordionDetails>
           </Accordion>
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-              className={classes.acc}
-            >
+          <Accordion
+            expanded={expanded === 3}
+            key={3}
+            onChange={handleChange(3)}
+          >
+            <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header" className={classes.acc}>
               <Typography className={classes.heading}>Blogs</Typography>
             </AccordionSummary>
             <AccordionDetails>
               <ListItem button component={Link} to="/blogs">
-                {/* <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon> */}
                 <ListItemText primary="All Blogs" />
               </ListItem>
             </AccordionDetails>
             <AccordionDetails>
               <ListItem button component={Link} to="/blog-form">
-                {/* <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon> */}
                 <ListItemText primary="Add Blog" />
               </ListItem>
             </AccordionDetails>
           </Accordion>
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-              className={classes.acc}
-            >
+          <Accordion
+            expanded={expanded === 4}
+            key={4}
+            onChange={handleChange(4)}
+          >
+            <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header" className={classes.acc}>
               <Typography className={classes.heading}>Admin</Typography>
             </AccordionSummary>
             <AccordionDetails>
               <ListItem button component={Link} to="/profile">
-                {/* <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon> */}
                 <ListItemText primary="My Profile" />
               </ListItem>
             </AccordionDetails>
             <AccordionDetails>
               <ListItem button component={Link} to="/accounts">
-                {/* <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon> */}
                 <ListItemText primary="All Accounts" />
               </ListItem>
             </AccordionDetails>
           </Accordion>
-          <Divider />
-          <ListItem button onClick={handleClick} className={classes.logout}>
-            {/* <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon> */}
+          <Accordion
+            expanded={expanded === 5}
+            key={5}
+            onChange={handleChange(5)}
+          >
+            <ListItem button component={Link} to="/settings/profile">
+              <ListItemText primary="Website Profile" />
+            </ListItem>
+          </Accordion>
+          <Divider style={{ marginBottom: '50px' }} />
+          {/* <ListItem button className={classes.logout}> */}
+          <ListItem button onClick={handlePopover} className={classes.logout}>
             <ListItemText primary="Log Out" />
             <Popover
               id={id}
@@ -156,12 +158,12 @@ const SidebarDrawer = () => {
                 horizontal: 'center',
               }}
             >
-              <Typography className={classes.typography}>The content of the Popover.</Typography>
+              <Button variant="contained" color="secondary" className={classes.button} onClick={logOut}>Are you sure?</Button>
             </Popover>
           </ListItem>
         </List>
       </Grid>
-      <Divider />
+      {/* <Divider /> */}
     </Grid>
   );
 };
