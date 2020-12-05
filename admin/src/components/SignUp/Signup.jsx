@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Button, Paper, TextField, Typography } from '@material-ui/core/';
+import Alert from '@material-ui/lab/Alert';
 
 import useStyles from './styles';
 import { userSignUp } from '../../actions/user';
-import { addSite } from '../../actions/site';
 
 const SignUp = () => {
   const classes = useStyles();
@@ -13,19 +13,18 @@ const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [site, setSite] = useState('');
+  const errorMessage = useSelector((state) => state.error);
   const dispatch = useDispatch();
 
-  // Need error handling for emails already in use
-  //   How to find display error message from API in reactjs
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(addSite(site, email));
     dispatch(userSignUp(site, name, email, password));
   };
 
   return (
     <Paper className={classes.root}>
       <Typography color="inherit" variant="h4" className={classes.title}>Sign up to create your store</Typography>
+      {!!errorMessage && <Alert severity="error">{errorMessage}</Alert>}
       <form className={classes.form} onSubmit={handleSubmit}>
         <TextField
           type="text"

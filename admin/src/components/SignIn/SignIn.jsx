@@ -12,7 +12,6 @@ const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const errorMessage = useSelector((state) => state.error);
-  // USING useSelector for Error handling ==> how to set up the error messages in the front-end (in the input fields)
   const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {

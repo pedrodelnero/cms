@@ -1,25 +1,35 @@
+import Sequelize from 'sequelize';
 import Site from '../models/site.model.js';
 // import Roles from '../models/roles.model.js';
-// import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 // import bcrypt from 'bcryptjs';
+
+const op = Sequelize.Op;
 
 export const addSite = async (req, res) => {    
   const { site: siteName, email } = req.body;  
+
+  console.log('0000', siteName, email)
   
   try {    
-    // let user = await Site.findOne({ where: { site_name: name && site_email: email }})
-    let site = await Site.findOne({ $and: [{site_name: siteName}, {site_email: email}] })
+    let site = await Site.findOne({ where: { [op.and]: [{site_name: siteName}, {site_email: email}] }})
 
-    if (site) return res.status(400).send({ message: "Site Already Exists" }); 
-
-    site = await Site.create({
-      site_name: siteName,
-      site_email: email,
-    });
-
-    res.status(201).send(site);  
+    console.log('SITE 1', site)
+    
+    if (site) {
+      // if (site) return res.status(400).send({ message: "Site Already Exists" }); 
+      throw new Error('Site Already Exists')
+    } else {
+      site = await Site.create({
+        site_name: siteName,
+        site_email: email,
+      });
+      
+      console.log('SITE 2', site)
+      res.status(201).send(site);  
+    }
   } catch (error) {
-    console.log(error)
+    res.status(400).send(error.message)
   }
 };
 
@@ -28,8 +38,10 @@ export const getSite = async (req, res) => {
   
   try {    
     let site = await Site.findOne({ where: { site_name: siteName }})
+    console.log('0000', site)
     
     !site ? res.status(404).json({ error: 'No page with ID provided' }) : res.status(200).send(site)
+    
   } catch (error) {
     console.log(error)
   }

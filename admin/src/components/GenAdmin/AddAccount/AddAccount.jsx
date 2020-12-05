@@ -12,11 +12,8 @@ const SignUp = () => {
   const [password, setPassword] = useState('');
   const [role, setRole] = React.useState('');
   const error = useSelector((state) => state.error);
-  const [errorMessage, setErrorMessage] = React.useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
   const dispatch = useDispatch();
-  console.log(error);
-
-  // if (error) setErrorMessage(error);
 
   useEffect(() => {
     if (error) {
@@ -24,14 +21,10 @@ const SignUp = () => {
     }
   }, [error]);
 
-  // Issue with error handling => cannot add the window...href, it'll trigger regardless of error or not
-  // Have to figure out way to make it trigger when fields are full and to not trigger when one of the fields ir empty
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage(null);
     dispatch(addAccountByAdmin(email, password, role));
-    // window.location.href = '/profile';
   };
 
   return (

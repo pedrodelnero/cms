@@ -1,5 +1,6 @@
 import User from '../models/user.model.js';
 import Roles from '../models/roles.model.js';
+import Site from '../models/site.model.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
@@ -7,22 +8,28 @@ export const addUser = async (req, res) => {
   const { site, name, email, password } = req.body;  
   
   try {    
+    if (!site || !name || !email || !password) throw new Error("Missing field");
+
     let user = await User.findOne({ where: { user_email: email }})
 
-    if (user) return res.status(400).send({ message: "User Already Exists" }); 
+    if (user) {
+      throw new Error("User Already Exists");
+    } else {
+      user = await User.create({
+        site_name: site,
+        user_email: email,
+        user_name: name,
+        user_password: bcrypt.hashSync(password, 8),
+        user_role: Roles.OWNER
+      });
+  
+      const token = jwt.sign({ user_name: user.user_name, user_role: user.user_role, site_name: user.site_name }, process.env.JWT_SECRET, { expiresIn: '24h' });
+      res.status(201).send({ user, token });  
+    }
+    
 
-    user = await User.create({
-      site_name: site,
-      user_email: email,
-      user_name: name,
-      user_password: bcrypt.hashSync(password, 8),
-      user_role: Roles.OWNER
-    });
-
-    const token = jwt.sign({ user_name: user.user_name, user_role: user.user_role, site_name: user.site_name }, process.env.JWT_SECRET, { expiresIn: '24h' });
-    res.status(201).send({ user, token });  
   } catch (error) {
-    console.log(error)
+    res.status(400).send(error.message)
   }
 };
 
@@ -30,17 +37,19 @@ export const loginUser = async (req, res) => {
   const { email, password } = req.body;
   
   try {
-    const user = await User.findByCredentials(email, password, res);
+    const user = await User.findByCredentials(email, password);
     if (!user) {
       res.status(404).send('No account found')
+      return
     } else {
-      const token = jwt.sign({ user_name: user.user_name, user_role: user.user_role, site_name: user.site_name }, process.env.JWT_SECRET, { expiresIn: '24h' });
-      res.send({ user, token });
+      let site = await Site.findOne({ where: { site_name: user.site_name }})
 
+      const token = jwt.sign({ user_name: user.user_name, user_role: user.user_role, site_name: user.site_name }, process.env.JWT_SECRET, { expiresIn: '24h' });
+
+      res.send({ user, token, site });
     }
   } catch (error) {
-    // console.log('err', error)
-    res.status(404).send('Incorrect email and/or password')
+    res.status(400).send(error.message)
   }
 };
 
@@ -101,11 +110,10 @@ export const updateUserPassword = async (req, res) => {
 export const addNewUserByAdmin = async (req, res) => {
   const { email, password, role } = req.body;
   const { site_name } = req.user;
-  console.log('role:', role, 'password:', password.length)
   
   try {
     let user = await User.findOne({ where: { user_email: email }});
-    if (user) return res.status(400).send({ message: "User Already Exists" }); 
+    if (user) throw new Error("User Already Exists"); 
 
     if (!email || !password || !role) {
       throw new Error('Missing field')
@@ -120,7 +128,7 @@ export const addNewUserByAdmin = async (req, res) => {
         res.send({ user });
     }
   } catch (error) {
-    res.status(500).send({message: error.message});
+    res.status(400).send( error.message);
   }
 };
 
