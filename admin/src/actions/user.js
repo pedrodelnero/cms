@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Cookies from 'universal-cookie';
 
-import { ADD_SITE, GET_USER, SIGN_UP, LOG_IN, LOG_OUT, FAIL_SIGN_IN, FAIL_SIGN_UP, FAIL_ADD_ACCOUNT } from '../constants/actionTypes';
+import { ADD_SITE, GET_USER, SIGN_UP, LOG_IN, LOG_OUT, CHANGE_PASSWORD, FAIL_SIGN_IN, FAIL_SIGN_UP, FAIL_ADD_ACCOUNT, FAIL_CHANGE_PASSWORD } from '../constants/actionTypes';
 // import { addSite } from './site';
 
 const cookies = new Cookies();
@@ -79,5 +79,16 @@ export const addAccountByAdmin = (email, password, role) => async (dispatch) => 
     window.location.href = '/profile';
   } catch (error) {
     dispatch({ type: FAIL_ADD_ACCOUNT, payload: error.response.data });
+  }
+};
+
+export const changePassword = (currentPassword, newPassword, confirmNewPassword) => async (dispatch) => {
+  try {
+    await userAPI.patch('/me', { currentPassword, newPassword, confirmNewPassword });
+    window.location.href = '/account';
+
+    dispatch({ type: CHANGE_PASSWORD });
+  } catch (error) {
+    dispatch({ type: FAIL_CHANGE_PASSWORD, payload: error.response.data });
   }
 };

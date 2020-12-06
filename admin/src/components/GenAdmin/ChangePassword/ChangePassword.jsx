@@ -1,38 +1,29 @@
 import React, { useState } from 'react';
-import Cookies from 'universal-cookie';
-import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
 import { Button, Paper, TextField, Typography } from '@material-ui/core/';
+import Alert from '@material-ui/lab/Alert';
 
 import useStyles from './styles';
-
-const cookies = new Cookies();
+import { changePassword } from '../../../actions/user';
 
 const ChangePassword = () => {
   const classes = useStyles();
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  const errorMessage = useSelector((state) => state.error);
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const token = cookies.get('token');
-    try {
-      await axios.patch('http://localhost:5000/user/me', { currentPassword, newPassword, confirmNewPassword }, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      window.location.href = '/account';
-    } catch (error) {
-      console.log(error.response.data.message);
-      // console.log(error.response.data.message);
-    }
+    dispatch(changePassword(currentPassword, newPassword, confirmNewPassword));
   };
 
   return (
     <Paper className={classes.root}>
       <Typography color="inherit" variant="h2" component="div">Change password</Typography>
-
+      {!!errorMessage && <Alert severity="error">{errorMessage}</Alert>}
       <form className={classes.form} onSubmit={handleSubmit}>
         <TextField
           type="password"

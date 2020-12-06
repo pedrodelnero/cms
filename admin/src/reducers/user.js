@@ -5,7 +5,6 @@ export default (user = {}, action) => {
     case GET_USER:
       return action.payload;
     case LOG_OUT:
-      console.log('user red: ', action.payload);
       return action.payload;
     default:
       return user;

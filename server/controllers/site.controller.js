@@ -1,23 +1,16 @@
 import Sequelize from 'sequelize';
 import Site from '../models/site.model.js';
-// import Roles from '../models/roles.model.js';
-import jwt from 'jsonwebtoken';
-// import bcrypt from 'bcryptjs';
+import User from '../models/user.model.js';
 
 const op = Sequelize.Op;
 
 export const addSite = async (req, res) => {    
   const { site: siteName, email } = req.body;  
-
-  console.log('0000', siteName, email)
   
   try {    
     let site = await Site.findOne({ where: { [op.and]: [{site_name: siteName}, {site_email: email}] }})
-
-    console.log('SITE 1', site)
     
     if (site) {
-      // if (site) return res.status(400).send({ message: "Site Already Exists" }); 
       throw new Error('Site Already Exists')
     } else {
       site = await Site.create({
@@ -25,7 +18,6 @@ export const addSite = async (req, res) => {
         site_email: email,
       });
       
-      console.log('SITE 2', site)
       res.status(201).send(site);  
     }
   } catch (error) {
@@ -34,16 +26,19 @@ export const addSite = async (req, res) => {
 };
 
 export const getSite = async (req, res) => {    
-  const { siteName } = req.params;  
+  const { siteId } = req.params;  
   
   try {    
-    let site = await Site.findOne({ where: { site_name: siteName }})
-    console.log('0000', site)
+    let site = await Site.findOne({ where: { site_id: siteId }})
     
-    !site ? res.status(404).json({ error: 'No page with ID provided' }) : res.status(200).send(site)
+    if (!site) {
+      throw new Error('No page with ID provided')
+     } else {
+      res.status(200).send(site)
+     } 
     
   } catch (error) {
-    console.log(error)
+    res.status(400).send(error.message)
   }
 };
 
@@ -63,19 +58,22 @@ export const updateSiteInfo = async (req,res) => {
   const { siteName, siteAddress, siteCountry, siteEmail } = req.body;
   const { site_name } = req.user;
 
-
   try {
     const site = await Site.findOne({ where: { site_name }});
     
-    if (site.site_name !== siteName) site.site_name = siteName;
+    if (site.site_name !== siteName) {
+      site.site_name = siteName;
+      const user = await useer.findAll({ where: { site_name }});
+      console.log(users)
+    };
     if (site.site_address !== siteAddress) site.site_address = siteAddress;
     if (site.site_country !== siteCountry) site.site_country = siteCountry;
     if (site.site_email !== siteEmail) site.site_email = siteEmail;
     
-    await site.save()
+    // await site.save()
     
-    res.send(site)
+    // res.send(site)
   } catch (error) {
-      res.status(500).json({ error: error.message })
+    res.status(500).send(error.message)
   }
 }

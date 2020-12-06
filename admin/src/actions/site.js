@@ -21,8 +21,8 @@ const siteAPI = axios.create({
 //   dispatch({ type: ADD_SITE, payload: data });
 // };
 
-export const getSite = (name) => async (dispatch) => {
-  const { data } = await siteAPI.get(`${name}`);
+export const getSite = (id) => async (dispatch) => {
+  const { data } = await siteAPI.get(`${id}`);
 
   dispatch({ type: GET_SITE, payload: data });
 };

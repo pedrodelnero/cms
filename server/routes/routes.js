@@ -30,7 +30,7 @@ router.post('/user/add-account', auth, addNewUserByAdmin)
 router.get('/user/all', auth, getUsers)
 router.delete('/user/:id', auth, deleteUsers)
 
-router.get('/site/:siteName', getSite)
+router.get('/site/:siteId', getSite)
 router.get('/sites/:siteId', getSiteById)
 router.post('/site/add', addSite)
 router.patch('/site/update', auth, updateSiteInfo)

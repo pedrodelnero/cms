@@ -22,7 +22,10 @@ export const DELETE_USERS = 'DELETE_USERS';
 export const FAIL_SIGN_IN = 'FAIL_SIGN_IN';
 export const FAIL_SIGN_UP = 'FAIL_SIGN_UP';
 export const FAIL_ADD_ACCOUNT = 'FAIL_ADD_ACCOUNT';
+export const FAIL_CHANGE_PASSWORD = 'FAIL_CHANGE_PASSWORD';
 
 export const ADD_SITE = 'ADD_SITE';
 export const GET_SITE = 'GET_SITE';
 export const UPDATE_SITE_INFO = 'UPDATE_SITE_INFO';
+
+export const CHANGE_PASSWORD = 'CHANGE_PASSWORD';

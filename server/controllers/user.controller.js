@@ -57,7 +57,7 @@ export const logoutUser = async (req, res) => {
   try {  
     res.status(200).send('Logged out');
   } catch (error) {
-    res.status(500).json({ message: error.message});
+    res.status(500).send(error.message);
   }
 };
 
@@ -69,7 +69,7 @@ export const getUser = async (req, res) => {
 
     res.send(user);
   } catch (error) {
-    res.status(500).json({ error: error.message })
+    res.status(500).send(error.message)
   }
 };
 
@@ -102,8 +102,7 @@ export const updateUserPassword = async (req, res) => {
 
     res.send(user)
   } catch (error) {
-    console.log(error)
-    res.status(500).json({ error: error.message })
+    res.status(500).send(error.message)
   }
 };
 
@@ -144,7 +143,7 @@ export const getUsers = async (req, res) => {
       res.send({message: 'Not available to access'})
     }
   } catch (error) {
-    res.status(500).send({message: error.message});
+    res.status(500).send(error.message);
   }
 };
 
@@ -162,6 +161,6 @@ export const deleteUsers = async (req, res) => {
       throw new Error('No Access')
     }
   } catch (error) {
-    res.status(500).send({message: error.message});
+    res.status(500).send(error.message);
   }
 };

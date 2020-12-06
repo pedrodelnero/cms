@@ -5,8 +5,7 @@ import Cookies from 'universal-cookie';
 
 import useStyles from './styles.js';
 import { getSite, updateSite } from '../../actions/site';
-// ISSUES
-// Cannot reload page due => will break as state from useSelector will clear
+
 const cookies = new Cookies();
 
 const SiteProfile = () => {
@@ -17,11 +16,11 @@ const SiteProfile = () => {
   const [siteCountry, setSiteCountry] = useState(site?.site_country || '');
   const [siteEmail, setSiteEmail] = useState(site?.site_email || '');
   const dispatch = useDispatch();
-  const siteCookie = cookies.get('site');
+  const siteCookieId = cookies.get('site');
 
   useEffect(() => {
-    dispatch(getSite(siteCookie));
-  }, [siteCookie, dispatch]);
+    dispatch(getSite(siteCookieId));
+  }, [siteCookieId, dispatch]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
