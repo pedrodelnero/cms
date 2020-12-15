@@ -26,10 +26,14 @@ const Page = db.define("page", {
     allowNull: false,
     unique: true
   },
-  site_name: {
+  site_id: {
     type: DataTypes.STRING(45),
     allowNull: false,
   },
+  // site_name: {
+  //   type: DataTypes.STRING(45),
+  //   allowNull: false,
+  // },
   page_metadata_keywords: {
     type: DataTypes.STRING(1000)
   },

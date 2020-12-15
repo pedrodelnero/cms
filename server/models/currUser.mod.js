@@ -8,6 +8,10 @@ const { DataTypes } = Sequelize;
 
 
 const User = db.define("user", {
+  site_name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   user_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -28,15 +32,6 @@ const User = db.define("user", {
   user_password: {
     type: DataTypes.STRING(100),
     allowNull: false,
-  },
-  // site_name: {
-  //   type: DataTypes.STRING,
-  //   allowNull: false,
-  // },
-  site_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    unique: true,
   },
   user_role: {
     type: DataTypes.STRING(10),

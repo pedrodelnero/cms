@@ -4,38 +4,23 @@ import User from '../models/user.model.js';
 
 const op = Sequelize.Op;
 
-export const addSite = async (site_name, site_email)  => {      
+export const addSite = async (req, res) => {    
+  const { site: siteName, email } = req.body;  
+  
   try {    
-    let site = await Site.findOne({ where: { [op.and]: [{ site_name }, { site_email }] }})
+    let site = await Site.findOne({ where: { [op.and]: [{site_name: siteName}, {site_email: email}] }})
     
     if (site) {
       throw new Error('Site Already Exists')
     } else {
-      site = await Site.create({ site_name, site_email });
-      console.log('site', site)
-      return(site);  
+      site = await Site.create({ site_name: siteName, site_email: email });
+      
+      res.status(201).send(site);  
     }
   } catch (error) {
-    return(error.message)
+    res.status(400).send(error.message)
   }
 };
-// export const addSite = async (req, res) => {    
-//   const { site: siteName, email } = req.body;  
-  
-//   try {    
-//     let site = await Site.findOne({ where: { [op.and]: [{site_name: siteName}, {site_email: email}] }})
-    
-//     if (site) {
-//       throw new Error('Site Already Exists')
-//     } else {
-//       site = await Site.create({ site_name: siteName, site_email: email });
-      
-//       res.status(201).send(site);  
-//     }
-//   } catch (error) {
-//     res.status(400).send(error.message)
-//   }
-// };
 
 export const getSite = async (req, res) => {    
   const { siteId } = req.params;  
@@ -53,22 +38,6 @@ export const getSite = async (req, res) => {
     res.status(400).send(error.message)
   }
 };
-// export const getSite = async (req, res) => {    
-//   const { siteId } = req.params;  
-  
-//   try {    
-//     let site = await Site.findOne({ where: { site_id: siteId }})
-    
-//     if (!site) {
-//       throw new Error('No page with ID provided')
-//      } else {
-//       res.status(200).send(site)
-//      } 
-    
-//   } catch (error) {
-//     res.status(400).send(error.message)
-//   }
-// };
 
 export const getSiteById = async (req, res) => {    
   const { siteId } = req.params;  

@@ -13,7 +13,7 @@ const cookies = new Cookies();
 
 const App = () => {
   const classes = useStyles();
-  const [isAuth, setIsAuth] = useState(!!cookies.get('site'));
+  const [isAuth, setIsAuth] = useState(!!cookies.get('token'));
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (

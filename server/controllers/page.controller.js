@@ -29,7 +29,8 @@ export const addPage = async (req, res) => {
             page_title: pageTitle,
             page_body: pageBody,
             page_slug: pageSlug,
-            site_name: req.user.site_name,
+            site_id: req.user.site_id,
+            // site_name: req.user.site_name,
             page_metadata_keywords: metaKeywords,
             page_metadata_description: metaDescription,
             page_search_keywords: searchKeywords

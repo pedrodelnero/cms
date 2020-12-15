@@ -15,7 +15,8 @@ export const getBlogs = async (req, res) => {
 
 export const getBlogsByAdmin = async (req, res) => {
     try {
-        const blogs = await Blog.findAll({where: {site_name: req.user.site_name}, attributes: ['blog_id', 'blog_title', 'blog_body', 'blog_slug', 'blog_author']});
+        const blogs = await Blog.findAll({where: {site_id: req.user.site_id}, attributes: ['blog_id', 'blog_title', 'blog_body', 'blog_slug', 'blog_author']});
+        // const blogs = await Blog.findAll({where: {site_name: req.user.site_name}, attributes: ['blog_id', 'blog_title', 'blog_body', 'blog_slug', 'blog_author']});
 
         res.send(blogs)
     } catch (error) {
@@ -24,7 +25,7 @@ export const getBlogsByAdmin = async (req, res) => {
 };
 
 export const addBlog = async (req, res) => {    
-    const { blogTitle, blogBody, blogAuthor, savedSlug } = req.body; 
+    const { blogTitle, blogBody, blogAuthor } = req.body; 
     
     try {     
         await Blog.create({
@@ -32,7 +33,8 @@ export const addBlog = async (req, res) => {
             blog_body: blogBody,
             blog_slug: blogTitle.toLowerCase().trim().replace(/ /g, '-'),
             blog_author: blogAuthor,
-            site_name: req.user.site_name
+            site_id: req.user.site_id,
+            // site_name: req.user.site_name
 
         });    
     } catch (error) {

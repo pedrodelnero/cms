@@ -26,10 +26,14 @@ const Blog = db.define("blog", {
     allowNull: false,
     unique: true
   },
-  site_name: {
+  site_id: {
     type: DataTypes.STRING(45),
     allowNull: false,
   },
+  // site_name: {
+  //   type: DataTypes.STRING(45),
+  //   allowNull: false,
+  // },
   blog_author: {
     type: DataTypes.STRING(45),
     allowNull: false,

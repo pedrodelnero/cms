@@ -1,68 +1,63 @@
 import React, { useState } from 'react';
-import Cookies from 'universal-cookie';
-import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { Button, Paper, TextField, Typography } from '@material-ui/core/';
+import Alert from '@material-ui/lab/Alert';
 
-import './styles.css';
+import useStyles from './styles.js';
+import { confirmNewAccount } from '../../../actions/user';
 
 const ConfirmNewAccount = () => {
+  const classes = useStyles();
   const [name, setName] = useState('');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
-
-  const cookies = new Cookies();
+  const errorMessage = useSelector((state) => state.error);
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const token = cookies.get('token');
-    try {
-      await axios.patch('http://localhost:5000/user/me', { name, currentPassword, newPassword, confirmNewPassword }, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      window.location.href = '/profile';
-    } catch (error) {
-      console.log(error);
-      // console.log(error.response.data.message);
-    }
+    dispatch(confirmNewAccount(name, currentPassword, newPassword, confirmNewPassword));
   };
 
   return (
-    <>
-      <div className="confirm-new-account">
-        <h3>Confirm new account</h3>
-        <form className="confirm-new-account-form" onSubmit={handleSubmit}>
-          <h4>Name</h4>
-          <input
-            type="text"
-            placeholder="Your name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <h4>Password</h4>
-          <input
-            type="password"
-            placeholder="Current password"
-            value={currentPassword}
-            onChange={(e) => setCurrentPassword(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="New password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Confirm new password"
-            value={confirmNewPassword}
-            onChange={(e) => setConfirmNewPassword(e.target.value)}
-          />
-          <button type="submit">Done</button>
-        </form>
-      </div>
-    </>
+    <Paper className={classes.root}>
+      <Typography className={classes.title} color="inherit" variant="h4">Confirm new account</Typography>
+      {!!errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+      <form className={classes.form} onSubmit={handleSubmit}>
+        <Typography color="inherit" variant="h5">Name</Typography>
+        <TextField
+          type="text"
+          variant="outlined"
+          placeholder="Your name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <Typography color="inherit" variant="h5">Password</Typography>
+        <TextField
+          type="password"
+          variant="outlined"
+          placeholder="Current password"
+          value={currentPassword}
+          onChange={(e) => setCurrentPassword(e.target.value)}
+        />
+        <TextField
+          type="password"
+          variant="outlined"
+          placeholder="New password"
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+        />
+        <TextField
+          type="password"
+          variant="outlined"
+          placeholder="Confirm new password"
+          value={confirmNewPassword}
+          onChange={(e) => setConfirmNewPassword(e.target.value)}
+        />
+        <Button variant="contained" color="primary" type="submit">Done</Button>
+      </form>
+    </Paper>
   );
 };
 

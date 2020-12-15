@@ -1,13 +1,8 @@
-import Sequelize from 'sequelize';
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
-
 import User from '../models/user.model.js';
 import Roles from '../models/roles.model.js';
 import Site from '../models/site.model.js';
-import { addSite } from './site.controller.js'
-
-const op = Sequelize.Op;
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
 
 export const addUser = async (req, res) => {    
   const { site, name, email, password } = req.body;  
@@ -20,18 +15,16 @@ export const addUser = async (req, res) => {
     if (user) {
       throw new Error("User Already Exists");
     } else {
-      const { dataValues: { site_id }} = await addSite(site, email)
       user = await User.create({
+        site_name: site,
         user_email: email,
         user_name: name,
         user_password: bcrypt.hashSync(password, 8),
-        site_name: site,
-        site_id: site_id,
         user_role: Roles.OWNER
       });
-
-      const token = jwt.sign({ user_name: user.user_name, user_role: user.user_role, site_id }, process.env.JWT_SECRET, { expiresIn: '24h' });
-      res.status(201).send({ user, token, site_id });  
+  
+      const token = jwt.sign({ user_name: user.user_name, user_role: user.user_role, site_name: user.site_name }, process.env.JWT_SECRET, { expiresIn: '24h' });
+      res.status(201).send({ user, token });  
     }
   } catch (error) {
     res.status(400).send(error.message)
@@ -47,13 +40,11 @@ export const loginUser = async (req, res) => {
       res.status(404).send('No account found')
       return
     } else {
-      let { site_id } = await Site.findOne({ where: { site_id: user.site_id }})
+      let site = await Site.findOne({ where: { site_name: user.site_name }})
 
+      const token = jwt.sign({ user_name: user.user_name, user_role: user.user_role, site_name: user.site_name }, process.env.JWT_SECRET, { expiresIn: '24h' });
 
-      const token = jwt.sign({ user_id: user.user_id, user_role: user.user_role, site_id }, process.env.JWT_SECRET, { expiresIn: '24h' });
-      // const token = jwt.sign({ user_name: user.user_name, user_role: user.user_role, site_name: user.site_name }, process.env.JWT_SECRET, { expiresIn: '24h' });
-
-      res.send({ user, token, site_id });
+      res.send({ user, token, site });
     }
   } catch (error) {
     res.status(400).send(error.message)
@@ -79,18 +70,14 @@ export const getUser = async (req, res) => {
     res.status(500).send(error.message)
   }
 };
-
-export const updateUserProfileDetails = async (req, res) => {
-  const { user_id, site_id }  = req.user;
+// SOMETHING WRONG WHEN CONFIRM NEW ACCOUNT
+// ADDED NAME TO WRONG ACCOUNT
+export const updateUserPassword = async (req, res) => {
+  const { user_name }  = req.user;
   const { currentPassword, newPassword, confirmNewPassword }  = req.body;
-
-  console.log('site', site_id)
   
   try {
-    let user = await User.findOne({ where: { [op.and]: [{ user_id }, { site_id }] }})
-    // const user = await User.findOne({ where: { site_id }});
-
-    console.log('site', user)
+    const user = await User.findOne({ where: { user_name }});
     
     if (req.body.name) {
       user.user_name = req.body.name;
@@ -120,7 +107,7 @@ export const updateUserProfileDetails = async (req, res) => {
 
 export const addNewUserByAdmin = async (req, res) => {
   const { email, password, role } = req.body;
-  const { site_id } = req.user;
+  const { site_name } = req.user;
   
   try {
     let user = await User.findOne({ where: { user_email: email }});
@@ -130,8 +117,7 @@ export const addNewUserByAdmin = async (req, res) => {
       throw new Error('Missing field')
     } else {
         user = await User.create({
-          site_id: site_id,
-          // site_name: site_name,
+          site_name: site_name,
           user_email: email,
           user_password: bcrypt.hashSync(password, 8),
           user_role: role
