@@ -13,10 +13,10 @@ const userAPI = axios.create({
   headers: { Authorization: `Bearer ${token}` },
 });
 
-const siteAPI = axios.create({
-  baseURL: 'http://localhost:5000/site',
-  headers: { Authorization: `Bearer ${token}` },
-});
+// const siteAPI = axios.create({
+//   baseURL: 'http://localhost:5000/site',
+//   headers: { Authorization: `Bearer ${token}` },
+// });
 
 export const getUser = () => async (dispatch) => {
   const { data: user } = await userAPI.get('/');
@@ -31,8 +31,9 @@ export const userSignUp = (site, name, email, password) => async (dispatch) => {
     window.location.href = '/profile';
 
     cookies.set('token', userData.token, options);
-    cookies.set('user', userData.user.user_name, options);
+    cookies.set('user', userData.user_name, options);
     cookies.set('site', userData.site_id, options);
+    cookies.set('role', userData.user_role, options);
     // cookies.set('site', siteData.site_id, options);
 
     dispatch({ type: SIGN_UP });
@@ -52,12 +53,14 @@ export const userLogIn = (email, password) => async (dispatch) => {
     if (!data.user.user_name) {
       cookies.set('token', data.token, options);
       cookies.set('site', data.site_id, options);
+      cookies.set('role', data.user.user_role, options);
       window.location.href = '/confirm-new-account';
     } else {
       window.location.href = '/profile';
       cookies.set('token', data.token, options);
       cookies.set('user', data.user.user_name, options);
       cookies.set('site', data.site_id, options);
+      cookies.set('role', data.user.user_role, options);
     }
 
     dispatch({ type: LOG_IN });
@@ -77,8 +80,7 @@ export const userLogOut = () => async (dispatch) => {
 
 export const addAccountByAdmin = (email, password, role) => async (dispatch) => {
   try {
-    const { data } = await userAPI.post('/add-account', { email, password, role });
-    cookies.set('user', data.user.user_name, options);
+    await userAPI.post('/add-account', { email, password, role });
 
     window.location.href = '/profile';
   } catch (error) {
@@ -99,8 +101,10 @@ export const changePassword = (currentPassword, newPassword, confirmNewPassword)
 
 export const confirmNewAccount = (name, currentPassword, newPassword, confirmNewPassword) => async (dispatch) => {
   try {
-    await userAPI.patch('/me', { name, currentPassword, newPassword, confirmNewPassword });
-    window.location.href = '/account';
+    const { data } = await userAPI.patch('/me', { name, currentPassword, newPassword, confirmNewPassword });
+    cookies.set('user', data.user_name, options);
+
+    window.location.href = '/profile';
 
     dispatch({ type: CONFIRM_NEW_ACCOUNT });
   } catch (error) {

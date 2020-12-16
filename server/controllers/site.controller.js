@@ -12,7 +12,6 @@ export const addSite = async (site_name, site_email)  => {
       throw new Error('Site Already Exists')
     } else {
       site = await Site.create({ site_name, site_email });
-      console.log('site', site)
       return(site);  
     }
   } catch (error) {

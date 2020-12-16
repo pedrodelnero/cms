@@ -21,7 +21,7 @@ export const addUser = async (req, res) => {
       throw new Error("User Already Exists");
     } else {
       const { dataValues: { site_id }} = await addSite(site, email)
-      user = await User.create({
+      const { dataValues: { user_id, user_role, user_name }} = await User.create({
         user_email: email,
         user_name: name,
         user_password: bcrypt.hashSync(password, 8),
@@ -29,9 +29,8 @@ export const addUser = async (req, res) => {
         site_id: site_id,
         user_role: Roles.OWNER
       });
-
-      const token = jwt.sign({ user_name: user.user_name, user_role: user.user_role, site_id }, process.env.JWT_SECRET, { expiresIn: '24h' });
-      res.status(201).send({ user, token, site_id });  
+      const token = jwt.sign({ user_id, user_role, site_id }, process.env.JWT_SECRET, { expiresIn: '24h' });
+      res.status(201).send({ user_name, token, site_id, user_role });  
     }
   } catch (error) {
     res.status(400).send(error.message)
@@ -44,11 +43,9 @@ export const loginUser = async (req, res) => {
   try {
     const user = await User.findByCredentials(email, password);
     if (!user) {
-      res.status(404).send('No account found')
-      return
+      throw new Error('No account found')
     } else {
       let { site_id } = await Site.findOne({ where: { site_id: user.site_id }})
-
 
       const token = jwt.sign({ user_id: user.user_id, user_role: user.user_role, site_id }, process.env.JWT_SECRET, { expiresIn: '24h' });
       // const token = jwt.sign({ user_name: user.user_name, user_role: user.user_role, site_name: user.site_name }, process.env.JWT_SECRET, { expiresIn: '24h' });
@@ -69,11 +66,11 @@ export const logoutUser = async (req, res) => {
 };
 
 export const getUser = async (req, res) => {
-  const { user_name } = req.user;
+  const { user_id } = req.user;
   
   try {
-    let user = await User.findOne({ where: { user_name }});
-
+    let user = await User.findOne({ where: { user_id }});
+    
     res.send(user);
   } catch (error) {
     res.status(500).send(error.message)
@@ -83,15 +80,11 @@ export const getUser = async (req, res) => {
 export const updateUserProfileDetails = async (req, res) => {
   const { user_id, site_id }  = req.user;
   const { currentPassword, newPassword, confirmNewPassword }  = req.body;
-
-  console.log('site', site_id)
   
   try {
     let user = await User.findOne({ where: { [op.and]: [{ user_id }, { site_id }] }})
-    // const user = await User.findOne({ where: { site_id }});
-
-    console.log('site', user)
-    
+    console.log('update', user.user_password)
+    // const user = await User.findOne({ where: { site_id }});    
     if (req.body.name) {
       user.user_name = req.body.name;
     }
@@ -137,7 +130,7 @@ export const addNewUserByAdmin = async (req, res) => {
           user_role: role
         });
           
-        res.send({ user });
+        res.send('Profile Created');
     }
   } catch (error) {
     res.status(400).send( error.message);
