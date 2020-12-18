@@ -139,11 +139,11 @@ export const addNewUserByAdmin = async (req, res) => {
 };
 
 export const getUsers = async (req, res) => {
-  const { user_role, site_name } = req.user;
+  const { user_role, site_id } = req.user;
   
   try {
     if (user_role === Roles.OWNER || user_role === Roles.ADMIN) {
-      const users = await User.findAll({ where: { site_name }})
+      const users = await User.findAll({ where: { site_id }})
 
       res.send(users)
     } else {

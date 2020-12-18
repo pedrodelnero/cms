@@ -17,17 +17,19 @@ const App = () => {
   const classes = useStyles();
   const [isAuth, setIsAuth] = useState(!!cookies.get('token'));
   const [mobileOpen, setMobileOpen] = useState(false);
-  const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
-  console.log('app', user);
+  console.log('app');
 
   useEffect(() => {
-    dispatch(getUser());
+    if (isAuth) {
+      dispatch(getUser());
+      // dispatch(getSite());
+    }
   }, []);
 
   return (
-    <AuthApi.Provider value={{ isAuth, setIsAuth, mobileOpen, setMobileOpen, user }}>
+    <AuthApi.Provider value={{ isAuth, setIsAuth, mobileOpen, setMobileOpen }}>
       <div className={classes.app}>
         <CssBaseline />
         <Router>
@@ -42,7 +44,7 @@ const App = () => {
                 {/* <PrivateRoute path="/blogs" component={BlogList} authProp={{ isAuth }} /> */}
                 <PrivateRoute path="/pages" component={PageList} authProp={{ isAuth }} />
                 <PrivateRoute path="/page-form/:id?" component={CreatePage} authProp={{ isAuth }} />
-                <PrivateRoute path="/profile" component={AdminPage} authProp={{ isAuth, user }} />
+                <PrivateRoute path="/profile" component={AdminPage} authProp={{ isAuth }} />
                 <PrivateRoute path="/accounts" component={EnhancedTable} authProp={{ isAuth }} />
                 <PrivateRoute path="/password" component={ChangePassword} authProp={{ isAuth }} />
                 <PrivateRoute path="/add-account" component={AddAccount} authProp={{ isAuth }} />

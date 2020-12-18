@@ -49,7 +49,7 @@ export const userSignUp = (site, name, email, password) => async (dispatch) => {
 export const userLogIn = (email, password) => async (dispatch) => {
   try {
     const { data } = await userAPI.post('/login', { email, password });
-
+    // console.log('user', data);
     if (!data.user.user_name) {
       cookies.set('token', data.token, options);
       cookies.set('site', data.site_id, options);

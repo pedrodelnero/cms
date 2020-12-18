@@ -21,7 +21,7 @@ const SidebarDrawer = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const dispatch = useDispatch();
   const location = useLocation();
-  const [expanded, setExpanded] = React.useState(false);
+  const [expanded, setExpanded] = useState(false);
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -53,11 +53,11 @@ const SidebarDrawer = () => {
 
   return (
     <Grid container direction="column">
-      <Grid container direction="row">
+      {/* <Grid container direction="row">
         <Grid item className={classes.iconDiv}>
           <div className={classes.toolbar} />
         </Grid>
-      </Grid>
+      </Grid> */}
       <Hidden smUp implementation="css">
         <Grid container direction="row" onClick={handleDrawerToggle}>
           <Grid item className={classes.icon}>
@@ -128,11 +128,14 @@ const SidebarDrawer = () => {
                 <ListItemText primary="My Profile" />
               </ListItem>
             </AccordionDetails>
-            {<AccordionDetails>
+            {(cookies.get('role') === 'owner' || cookies.get('role') === 'admin') && (
+            <AccordionDetails>
               <ListItem button component={Link} to="/accounts">
                 <ListItemText primary="All Accounts" />
               </ListItem>
-            </AccordionDetails> && (cookies.get('token') === 'owner' || cookies.get('token') === 'admin')}
+            </AccordionDetails>
+            )}
+            {/* </AccordionDetails> && (cookies.get('role') === 'owner' || cookies.get('role') === 'admin')} */}
           </Accordion>
           <Accordion
             expanded={expanded === 5}

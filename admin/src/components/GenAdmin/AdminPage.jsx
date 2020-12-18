@@ -2,17 +2,14 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Button, Grid, Paper, Typography } from '@material-ui/core/';
-import Cookies from 'universal-cookie';
 
 import { getUser } from '../../actions/user';
 import { useStyles } from './styles';
 
-const cookies = new Cookies();
-
 const AdminPage = () => {
   const classes = useStyles();
-  const { user_email } = useSelector((state) => state.user);
-  const dispatch = useDispatch();
+  const { user_email, user_role } = useSelector((state) => state.user);
+  // const dispatch = useDispatch();
 
   // useEffect(() => {
   //   dispatch(getUser());
@@ -28,8 +25,9 @@ const AdminPage = () => {
         </Grid>
         <Grid item xs={12} className={classes.actions}>
           <Button component={Link} to="/password" variant="outlined">Change your password</Button>
-          {<Button component={Link} to="/add-account" variant="outlined">Add account to site</Button>
-            && (cookies.get('token') === 'owner' || cookies.get('token') === 'admin')}
+          {(user_role === 'owner' || user_role === 'admin')
+            && <Button component={Link} to="/add-account" variant="outlined">Add account to site</Button>}
+          {/* && (cookies.get('token') === 'owner' || cookies.get('token') === 'admin')} */}
         </Grid>
       </Grid>
     </Paper>

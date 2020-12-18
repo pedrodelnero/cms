@@ -38,7 +38,8 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(0, 2),
     color: 'white',
     '&:hover': {
-      background: '#66F2F2F2',
+      background: 'rgb(0, 0, 0)',
+      // background: '#66F2F2F2',
     },
   },
 }));
