@@ -30,6 +30,10 @@ const Blog = db.define("blog", {
     type: DataTypes.STRING(45),
     allowNull: false,
   },
+  is_published: {
+    type: DataTypes.BOOLEAN,
+
+  },
   // site_name: {
   //   type: DataTypes.STRING(45),
   //   allowNull: false,

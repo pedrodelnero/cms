@@ -25,17 +25,25 @@ const BlogForm = () => {
     if (id) dispatch(getBlogById(id));
   }, [id, dispatch]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const publishBlog = () => {
     const blogBody = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
     // saveSlug();
 
     if (id) {
-      dispatch(updateBlog(id, { blogTitle, blogBody, blogSlug }));
+      dispatch(updateBlog(id, { blogTitle, blogBody, blogSlug, isPublished: 1 }));
     } else {
-      dispatch(addBlog({ blogTitle, blogBody, blogAuthor, blogSlug }));
+      dispatch(addBlog({ blogTitle, blogBody, blogAuthor, blogSlug, isPublished: true }));
     }
     window.location.href = '/blogs';
+  };
+  const saveDraft = () => {
+    const blogBody = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
+
+    if (id) {
+      dispatch(updateBlog(id, { blogTitle, blogBody, blogSlug, isPublished: false }));
+    } else {
+      dispatch(addBlog({ blogTitle, blogBody, blogAuthor, blogSlug, isPublished: false }));
+    }
   };
 
   const onEditorStateChange = (richTextEditorState) => setEditorState(richTextEditorState);
@@ -43,7 +51,8 @@ const BlogForm = () => {
   return (
     <>
       <Typography variant="h3" style={{ marginBottom: 20 }}>{id ? 'Edit Blog' : 'Add Blog'}</Typography>
-      <form onSubmit={handleSubmit}>
+      <form>
+        {/* <form onSubmit={handleSubmit}> */}
         <Paper className={classes.root}>
           <Typography variant="h5" className={classes.subTitle}>Blog Title</Typography>
           <TextField
@@ -88,7 +97,10 @@ const BlogForm = () => {
             onChange={(e) => setBlogSlug(e.target.value)}
           />
         </Paper>
-        <Button className={classes.button} variant="contained" color="primary" type="submit">{id ? 'Edit Blog' : 'Add Blog'}</Button>
+        <Button className={classes.button} variant="contained" color="primary" onClick={publishBlog}>{id ? 'Update' : 'Publish'}</Button>
+        <Button className={classes.button} variant="contained" type="submit" onClick={saveDraft}>Save Draft</Button>
+        {/* <Button className={classes.button} variant="contained" color="primary" type="submit">{id ? 'Update' : 'Publish'}</Button>
+        <Button className={classes.button} variant="contained" type="submit">Save Draft</Button> */}
       </form>
     </>
   );

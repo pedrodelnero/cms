@@ -66,12 +66,13 @@ export const logoutUser = async (req, res) => {
 };
 
 export const getUser = async (req, res) => {
-  const { user_id } = req.user;
+  const { user_id : id} = req.user;
   
   try {
-    let user = await User.findOne({ where: { user_id }});
+    let { user_id, user_name, user_email, user_role, site_id } = await User.findOne({ where: { user_id : id}});
+    // let user = await User.findOne({ where: { user_id }});
     
-    res.send(user);
+    res.send({ user_id, user_name, user_email, user_role , site_id});
   } catch (error) {
     res.status(500).send(error.message)
   }

@@ -6,10 +6,13 @@ import { useTheme } from '@material-ui/core/styles';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Cookies from 'universal-cookie';
 
 import useStyles from './styles.js';
 import { userLogOut } from '../../../actions/user';
 import AuthApi from '../../../context/Auth';
+
+const cookies = new Cookies();
 
 const SidebarDrawer = () => {
   const classes = useStyles();
@@ -125,11 +128,11 @@ const SidebarDrawer = () => {
                 <ListItemText primary="My Profile" />
               </ListItem>
             </AccordionDetails>
-            <AccordionDetails>
+            {<AccordionDetails>
               <ListItem button component={Link} to="/accounts">
                 <ListItemText primary="All Accounts" />
               </ListItem>
-            </AccordionDetails>
+            </AccordionDetails> && (cookies.get('token') === 'owner' || cookies.get('token') === 'admin')}
           </Accordion>
           <Accordion
             expanded={expanded === 5}

@@ -8,7 +8,7 @@ export const getBlogs = async (req, res) => {
 
         res.send(blogs)
     } catch (error) {
-        console.log(error)
+        res.status(500).send(error.message);
     }
 };
 
@@ -20,25 +20,25 @@ export const getBlogsByAdmin = async (req, res) => {
 
         res.send(blogs)
     } catch (error) {
-        console.log(error)
+        res.status(500).send(error.message);
     }
 };
 
 export const addBlog = async (req, res) => {    
-    const { blogTitle, blogBody, blogAuthor } = req.body; 
-    
+    const { blogTitle, blogBody, blogAuthor, isPublished } = req.body; 
     try {     
         await Blog.create({
             blog_title: blogTitle,
             blog_body: blogBody,
             blog_slug: blogTitle.toLowerCase().trim().replace(/ /g, '-'),
             blog_author: blogAuthor,
+            is_published: isPublished,
             site_id: req.user.site_id,
             // site_name: req.user.site_name
 
         });    
     } catch (error) {
-        console.log(error)
+        res.status(500).send(error.message);
     }
 };
 
@@ -48,7 +48,7 @@ export const deleteBlog = async (req, res) => {
         await Blog.destroy({ where: { blog_id: blogId }})
         
     } catch (error) {
-        console.log(error)
+        res.status(500).send(error.message);
     }
 };
 
@@ -67,7 +67,7 @@ export const updateBlogById = async (req,res) => {
       
       res.send(blog)
     } catch (error) {
-        res.status(500).json({ error: error.message })
+        res.status(500).send(error.message);
     }
 }
 
@@ -79,7 +79,7 @@ export const getBlogById = async (req, res) => {
         !blog ? res.status(404).json({ error: 'No blog with ID provided' }) : res.status(200).send(blog)
 
     } catch (error) {
-        console.log(error)
+        res.status(500).send(error.message);
     }
 };
 
@@ -87,13 +87,12 @@ export const getBlogById = async (req, res) => {
 // SITE 
 export const getBySlug = async (req, res) => {
     const { slug } = req.params;
-    console.log('')
     try {
         const blog = await Blog.findOne({where: { blog_slug: slug}});
 
         !blog ? res.status(404).json({ error: 'No blog with ID provided' }) : res.status(200).send(blog)
 
     } catch (error) {
-        console.log(error)
+        res.status(500).send(error.message);
     }
 };

@@ -19,6 +19,28 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
   },
+  titles: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  // account: {
+  //   display: 'flex',
+  //   alignItems: 'center',
+  //   // alignContent: 'center',
+  //   justifyContent: 'space-evenly',
+  //   width: '80px',
+  //   '&:hover': {
+  //     background: '#f00',
+  //   },
+  // },
+  button: {
+    padding: theme.spacing(0, 2),
+    color: 'white',
+    '&:hover': {
+      background: '#66F2F2F2',
+    },
+  },
 }));
 
 export default useStyles;

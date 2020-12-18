@@ -1,9 +1,12 @@
 import React, { useContext } from 'react';
+import { useSelector } from 'react-redux';
 import AppBar from '@material-ui/core/AppBar';
+import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Typography from '@material-ui/core/Typography';
 import Toolbar from '@material-ui/core/Toolbar';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 import useStyles from './styles.js';
 import AuthApi from '../../context/Auth';
@@ -11,6 +14,8 @@ import AuthApi from '../../context/Auth';
 const Header = () => {
   const classes = useStyles();
   const { isAuth, mobileOpen, setMobileOpen } = useContext(AuthApi);
+  const { user_name } = useSelector((state) => state.user);
+  // console.log(user);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -30,9 +35,16 @@ const Header = () => {
         >
           <MenuIcon />
         </IconButton>
-        <Typography variant="h6" noWrap>
-          CMS SITE
-        </Typography>
+        <div className={classes.titles}>
+          <Typography variant="h6">CMS SITE</Typography>
+          <Button
+            className={classes.button}
+            startIcon={<AccountCircleIcon />}
+          >{user_name}
+          </Button>
+          {/* <AccountCircleIcon style={{ margin: 0, padding: 0 }} />
+            <Typography variant="h6" style={{ margin: 0, padding: 0 }}>{user_name}</Typography> */}
+        </div>
       </Toolbar>
     </AppBar>
   );

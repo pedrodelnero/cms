@@ -5,20 +5,18 @@ import { Button, Grid, Paper, Typography } from '@material-ui/core/';
 import Cookies from 'universal-cookie';
 
 import { getUser } from '../../actions/user';
-
 import { useStyles } from './styles';
 
 const cookies = new Cookies();
 
 const AdminPage = () => {
   const classes = useStyles();
+  const { user_email } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
-  const { user_email } = useSelector((state) => state.user);
-
-  useEffect(() => {
-    dispatch(getUser());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(getUser());
+  // }, [dispatch]);
 
   return (
     <Paper className={classes.root}>
