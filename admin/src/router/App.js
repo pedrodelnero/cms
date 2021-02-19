@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Switch } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import Cookies from 'universal-cookie';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
@@ -18,8 +18,6 @@ const App = () => {
   const [isAuth, setIsAuth] = useState(!!cookies.get('token'));
   const [mobileOpen, setMobileOpen] = useState(false);
   const dispatch = useDispatch();
-
-  console.log('app');
 
   useEffect(() => {
     if (isAuth) {

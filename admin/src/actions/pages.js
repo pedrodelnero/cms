@@ -1,24 +1,31 @@
-import axios from 'axios';
-import Cookies from 'universal-cookie';
+import axios from "axios";
+import Cookies from "universal-cookie";
 
-import { ADD_PAGE, DELETE_PAGE, GET_PAGES, GET_PAGE_BY_ID, UPDATE_PAGE } from '../constants/actionTypes';
+import {
+  ADD_PAGE,
+  DELETE_PAGE,
+  GET_PAGES,
+  GET_PAGE_BY_ID,
+  UPDATE_PAGE,
+} from "../constants/actionTypes";
 
 const cookies = new Cookies();
-const token = cookies.get('token');
+const token = cookies.get("token");
 
 const api = axios.create({
-  baseURL: 'http://localhost:5000/pages',
+  baseURL: "https://pdn-cms-server.herokuapp.com/pages",
+  // baseURL: 'http://localhost:5000/pages',
   headers: { Authorization: `Bearer ${token}` },
 });
 
 export const getPages = () => async (dispatch) => {
-  const { data: pages } = await api.get('/');
+  const { data: pages } = await api.get("/");
 
   dispatch({ type: GET_PAGES, payload: pages });
 };
 
 export const addPage = (page) => async (dispatch) => {
-  const { data } = await api.post('/', page);
+  const { data } = await api.post("/", page);
 
   dispatch({ type: ADD_PAGE, payload: data });
 };

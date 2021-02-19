@@ -1,18 +1,19 @@
-import axios from 'axios';
-import Cookies from 'universal-cookie';
+import axios from "axios";
+import Cookies from "universal-cookie";
 
-import { GET_USERS, DELETE_USERS } from '../constants/actionTypes';
+import { GET_USERS, DELETE_USERS } from "../constants/actionTypes";
 
 const cookies = new Cookies();
-const token = cookies.get('token');
+const token = cookies.get("token");
 
 const userAPI = axios.create({
-  baseURL: 'http://localhost:5000/user',
+  baseURL: "https://pdn-cms-server.herokuapp.com/user",
+  // baseURL: 'http://localhost:5000/user',
   headers: { Authorization: `Bearer ${token}` },
 });
 
 export const getUsers = () => async (dispatch) => {
-  const { data: users } = await userAPI.get('/all');
+  const { data: users } = await userAPI.get("/all");
 
   dispatch({ type: GET_USERS, payload: users });
 };

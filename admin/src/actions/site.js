@@ -1,15 +1,16 @@
-import axios from 'axios';
-import Cookies from 'universal-cookie';
+import axios from "axios";
+import Cookies from "universal-cookie";
 
-import { GET_SITE, UPDATE_SITE_INFO } from '../constants/actionTypes';
+import { GET_SITE, UPDATE_SITE_INFO } from "../constants/actionTypes";
 // import { ADD_SITE, GET_SITE, UPDATE_SITE_INFO } from '../constants/actionTypes';
 
 const cookies = new Cookies();
-const token = cookies.get('token');
+const token = cookies.get("token");
 // const options = { path: '/', expires: new Date(new Date().getTime() + (24 * 60 * 60 * 1000)) };
 
 const siteAPI = axios.create({
-  baseURL: 'http://localhost:5000/site',
+  baseURL: "https://pdn-cms-server.herokuapp.com/site",
+  // baseURL: 'http://localhost:5000/site',
   headers: { Authorization: `Bearer ${token}` },
 });
 
@@ -28,8 +29,7 @@ export const getSite = (id) => async (dispatch) => {
 };
 
 export const updateSite = (site) => async (dispatch) => {
-  const { data } = await siteAPI.patch('/update', site);
+  const { data } = await siteAPI.patch("/update", site);
 
   dispatch({ type: UPDATE_SITE_INFO, payload: data });
 };
-

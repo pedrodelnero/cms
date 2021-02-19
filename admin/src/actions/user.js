@@ -1,39 +1,55 @@
-import axios from 'axios';
-import Cookies from 'universal-cookie';
+import axios from "axios";
+import Cookies from "universal-cookie";
 
-import { ADD_SITE, GET_USER, SIGN_UP, LOG_IN, LOG_OUT, CHANGE_PASSWORD, CONFIRM_NEW_ACCOUNT, FAIL_SIGN_IN, FAIL_SIGN_UP, FAIL_ADD_ACCOUNT, FAIL_CHANGE_PASSWORD } from '../constants/actionTypes';
+import {
+  ADD_SITE,
+  GET_USER,
+  SIGN_UP,
+  LOG_IN,
+  LOG_OUT,
+  CHANGE_PASSWORD,
+  CONFIRM_NEW_ACCOUNT,
+  FAIL_SIGN_IN,
+  FAIL_SIGN_UP,
+  FAIL_ADD_ACCOUNT,
+  FAIL_CHANGE_PASSWORD,
+} from "../constants/actionTypes";
 // import { addSite } from './site';
 
 const cookies = new Cookies();
-const token = cookies.get('token');
-const options = { path: '/', expires: new Date(new Date().getTime() + (24 * 60 * 60 * 1000)) };
+const token = cookies.get("token");
+const options = {
+  path: "/",
+  expires: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
+};
 
 const userAPI = axios.create({
-  baseURL: 'http://localhost:5000/user',
+  baseURL: "https://pdn-cms-server.herokuapp.com/user",
+  // baseURL: 'http://localhost:5000/user',
   headers: { Authorization: `Bearer ${token}` },
 });
 
-// const siteAPI = axios.create({
-//   baseURL: 'http://localhost:5000/site',
-//   headers: { Authorization: `Bearer ${token}` },
-// });
-
 export const getUser = () => async (dispatch) => {
-  const { data: user } = await userAPI.get('/');
+  const { data: user } = await userAPI.get("/");
 
   dispatch({ type: GET_USER, payload: user });
 };
 
 export const userSignUp = (site, name, email, password) => async (dispatch) => {
   try {
-    const { data: userData } = await userAPI.post('/signup', { site, name, email, password });
+    const { data: userData } = await userAPI.post("/signup", {
+      site,
+      name,
+      email,
+      password,
+    });
     // const { data: siteData } = await siteAPI.post('/add', { site, email });
-    window.location.href = '/profile';
+    window.location.href = "/profile";
 
-    cookies.set('token', userData.token, options);
-    cookies.set('user', userData.user_name, options);
-    cookies.set('site', userData.site_id, options);
-    cookies.set('role', userData.user_role, options);
+    cookies.set("token", userData.token, options);
+    cookies.set("user", userData.user_name, options);
+    cookies.set("site", userData.site_id, options);
+    cookies.set("role", userData.user_role, options);
     // cookies.set('site', siteData.site_id, options);
 
     dispatch({ type: SIGN_UP });
@@ -48,19 +64,19 @@ export const userSignUp = (site, name, email, password) => async (dispatch) => {
 
 export const userLogIn = (email, password) => async (dispatch) => {
   try {
-    const { data } = await userAPI.post('/login', { email, password });
+    const { data } = await userAPI.post("/login", { email, password });
     // console.log('user', data);
     if (!data.user.user_name) {
-      cookies.set('token', data.token, options);
-      cookies.set('site', data.site_id, options);
-      cookies.set('role', data.user.user_role, options);
-      window.location.href = '/confirm-new-account';
+      cookies.set("token", data.token, options);
+      cookies.set("site", data.site_id, options);
+      cookies.set("role", data.user.user_role, options);
+      window.location.href = "/confirm-new-account";
     } else {
-      window.location.href = '/profile';
-      cookies.set('token', data.token, options);
-      cookies.set('user', data.user.user_name, options);
-      cookies.set('site', data.site_id, options);
-      cookies.set('role', data.user.user_role, options);
+      window.location.href = "/profile";
+      cookies.set("token", data.token, options);
+      cookies.set("user", data.user.user_name, options);
+      cookies.set("site", data.site_id, options);
+      cookies.set("role", data.user.user_role, options);
     }
 
     dispatch({ type: LOG_IN });
@@ -70,28 +86,38 @@ export const userLogIn = (email, password) => async (dispatch) => {
 };
 
 export const userLogOut = () => async (dispatch) => {
-  const { data } = await userAPI.post('/logout');
-  cookies.remove('site', { path: '/' });
-  cookies.remove('token', { path: '/' });
-  cookies.remove('user', { path: '/' });
+  const { data } = await userAPI.post("/logout");
+  cookies.remove("site", { path: "/" });
+  cookies.remove("token", { path: "/" });
+  cookies.remove("user", { path: "/" });
 
   dispatch({ type: LOG_OUT, payload: data });
 };
 
-export const addAccountByAdmin = (email, password, role) => async (dispatch) => {
+export const addAccountByAdmin = (email, password, role) => async (
+  dispatch
+) => {
   try {
-    await userAPI.post('/add-account', { email, password, role });
+    await userAPI.post("/add-account", { email, password, role });
 
-    window.location.href = '/profile';
+    window.location.href = "/profile";
   } catch (error) {
     dispatch({ type: FAIL_ADD_ACCOUNT, payload: error.response.data });
   }
 };
 
-export const changePassword = (currentPassword, newPassword, confirmNewPassword) => async (dispatch) => {
+export const changePassword = (
+  currentPassword,
+  newPassword,
+  confirmNewPassword
+) => async (dispatch) => {
   try {
-    await userAPI.patch('/me', { currentPassword, newPassword, confirmNewPassword });
-    window.location.href = '/account';
+    await userAPI.patch("/me", {
+      currentPassword,
+      newPassword,
+      confirmNewPassword,
+    });
+    window.location.href = "/account";
 
     dispatch({ type: CHANGE_PASSWORD });
   } catch (error) {
@@ -99,12 +125,22 @@ export const changePassword = (currentPassword, newPassword, confirmNewPassword)
   }
 };
 
-export const confirmNewAccount = (name, currentPassword, newPassword, confirmNewPassword) => async (dispatch) => {
+export const confirmNewAccount = (
+  name,
+  currentPassword,
+  newPassword,
+  confirmNewPassword
+) => async (dispatch) => {
   try {
-    const { data } = await userAPI.patch('/me', { name, currentPassword, newPassword, confirmNewPassword });
-    cookies.set('user', data.user_name, options);
+    const { data } = await userAPI.patch("/me", {
+      name,
+      currentPassword,
+      newPassword,
+      confirmNewPassword,
+    });
+    cookies.set("user", data.user_name, options);
 
-    window.location.href = '/profile';
+    window.location.href = "/profile";
 
     dispatch({ type: CONFIRM_NEW_ACCOUNT });
   } catch (error) {
